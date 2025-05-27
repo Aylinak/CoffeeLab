@@ -1,0 +1,1824 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoffeeLab - Kahve Seçim Testi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Üst çubuk stilleri */
+        .nav-container {
+            background: #8B6B4E;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+            opacity: 0.9;
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+        }
+
+        .nav-link.active {
+            opacity: 1;
+            font-weight: 600;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .profile-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            text-decoration: none;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+
+        .profile-button:hover {
+            opacity: 1;
+        }
+
+        .logout-button {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .test-container {
+            max-width: 800px;
+            margin: 100px auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .question-container {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .question-container.active {
+            display: block;
+        }
+
+        .question {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .option {
+            padding: 1rem;
+            border: 2px solid var(--accent-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            background: white;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 1rem;
+            width: 20px;
+            height: 20px;
+        }
+
+        .option label {
+            cursor: pointer;
+            flex-grow: 1;
+        }
+
+        .option input[type="radio"]:checked + label {
+            font-weight: bold;
+        }
+
+        .option:hover label {
+            color: white;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #eee;
+            border-radius: 5px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: var(--accent-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .result-container {
+            display: none;
+            text-align: center;
+        }
+
+        .result-container.active {
+            display: block;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        .nav-button {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            background: var(--accent-color);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: #4a2504;
+        }
+
+        .nav-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .result-image {
+            max-width: 300px;
+            margin: 2rem auto;
+            border-radius: 15px;
+        }
+
+        .recipe-recommendations {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: #f8f8f8;
+            border-radius: 15px;
+        }
+
+        .recipe-recommendations h3 {
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+        }
+
+        .recipe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .recipe-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.10);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 2rem;
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .recipe-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+        }
+
+        .recipe-title {
+            font-size: 1.4rem;
+            color: #2d3a2d;
+            font-weight: bold;
+            margin: 1.2rem 0 0.5rem 0;
+            text-align: center;
+        }
+
+        .recipe-description {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            padding: 0 1rem;
+        }
+
+        .recipe-btn {
+            display: block;
+            width: 80%;
+            margin: 0 auto;
+            padding: 0.8rem 0;
+            background: #4a2c0a;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            text-align: center;
+            transition: background 0.3s ease;
+            border: none;
+            margin-top: 1rem;
+        }
+
+        .recipe-btn:hover {
+            background: #2d1a05;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Login Modal Styles */
+        .login-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0,0,0,0.8);
+            z-index: 1001;
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+            padding: 2rem;
+        }
+
+        .login-content {
+            position: relative;
+            background: white;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 45%;
+            height: 90vh;
+            max-width: 600px;
+            border-radius: 15px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+            overflow-y: auto;
+            -ms-overflow-style: none;
+        }
+
+        .login-content::-webkit-scrollbar {
+            display: none;
+        }
+
+        .login-header {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .login-header i {
+            font-size: 3rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .login-tabs {
+            display: flex;
+            margin: 2rem auto;
+            border-bottom: 2px solid #eee;
+            max-width: 400px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            background: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab-btn.active {
+            color: var(--accent-color);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent-color);
+        }
+
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .form-container.hidden {
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .form-options a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #2b1502;
+        }
+
+        .close-login {
+            position: absolute;
+            right: 1.5rem;
+            top: 1.5rem;
+            font-size: 2rem;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-login:hover {
+            color: var(--accent-color);
+        }
+
+        .message {
+            margin-top: 1rem;
+            padding: 0.8rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            text-align: center;
+            display: none;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            .login-content {
+                width: 90%;
+                height: 95vh;
+            }
+        }
+
+        /* Video bölümü responsive düzeltme */
+        .video-section {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .video-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .video-container video {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 15px;
+        }
+        @media (max-width: 600px) {
+            .video-section {
+                padding: 0 0.5rem;
+            }
+            .video-container {
+                max-width: 100%;
+            }
+        }
+
+        .recipe-video {
+            width: 100%;
+            max-width: 480px;
+            margin: 2rem auto;
+            background: #f8f8f8;
+            border-radius: 15px;
+            overflow: hidden;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            aspect-ratio: 16/9;
+            min-height: 240px;
+        }
+
+        .recipe-video video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            background: #000;
+        }
+        @media (max-width: 600px) {
+            .recipe-video {
+                max-width: 100%;
+                min-height: 160px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Üst çubuk -->
+    <nav class="nav-container">
+        <div class="nav-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-coffee"></i>
+                CoffeeLab
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Anasayfa</a>
+                <a href="recipes.html" class="nav-link">Tarifler</a>
+                <a href="favorites.html" class="nav-link">Favoriler</a>
+            </div>
+            <div class="nav-right">
+                <a href="profile.html" class="profile-button">
+                    <i class="fas fa-user"></i>
+                    Profilim
+                </a>
+                <a href="#" class="logout-button" onclick="handleLogout(); return false;">Çıkış Yap</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="test-container">
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        
+        <div id="questions-container">
+            <!-- Sorular JavaScript ile eklenecek -->
+        </div>
+
+        <div class="nav-buttons">
+            <button id="prevButton" class="nav-button" onclick="previousQuestion()" disabled>Önceki Soru</button>
+            <button id="nextButton" class="nav-button" onclick="nextQuestion()">Sonraki Soru</button>
+        </div>
+
+        <div class="result-container" id="result-container">
+            <h2>Size Önerebileceğimiz Tarifler</h2>
+            <div class="recipe-grid" id="recipe-grid">
+                <!-- Tarifler JavaScript ile eklenecek -->
+            </div>
+            <button onclick="window.location.href='index.html'" class="cta-button">Ana Sayfaya Dön</button>
+        </div>
+    </div>
+
+    <!-- Profil Modalı -->
+    <div id="profileModal" class="profile-modal" style="display:none; position:fixed; z-index:2000; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); backdrop-filter:blur(2px); justify-content:center; align-items:center;">
+        <div class="profile-modal-content" style="background:#fff; border-radius:16px; padding:1.5rem 2rem; box-shadow:0 8px 32px rgba(0,0,0,0.18); min-width:360px; max-width:480px; width:100%; position:relative; display:flex; flex-direction:column; gap:0.7rem; margin:0 auto; height:auto; max-height:none; overflow:visible;">
+            <span class="close-modal" onclick="closeProfileModal()" style="position:absolute; right:1.2rem; top:1.2rem; font-size:2rem; color:#8B6B4E; cursor:pointer;">&times;</span>
+            <h2>Profil Bilgilerim</h2>
+            <div class="form-group">
+                <label>Ad Soyad</label>
+                <input type="text" id="profileName" readonly>
+            </div>
+            <div class="form-group">
+                <label>E-posta</label>
+                <input type="email" id="profileEmail" readonly>
+            </div>
+            <hr>
+            <h3>Şifre Değiştir</h3>
+            <form id="changePasswordForm" onsubmit="handlePasswordChange(event)">
+                <div class="form-group">
+                    <label for="currentPassword">Mevcut Şifre</label>
+                    <input type="password" id="currentPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="newProfilePassword">Yeni Şifre</label>
+                    <input type="password" id="newProfilePassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmProfilePassword">Yeni Şifre Tekrar</label>
+                    <input type="password" id="confirmProfilePassword" required>
+                </div>
+                <button type="submit" class="submit-btn">Şifreyi Güncelle</button>
+            </form>
+            <div id="passwordChangeMessage" class="message"></div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="login-modal">
+        <div class="login-content">
+            <span class="close-login" onclick="closeLoginModal()">&times;</span>
+            <div class="login-header">
+                <i class="fas fa-coffee"></i>
+                <h2>Coffee<span class="accent">Lab</span></h2>
+            </div>
+            <div class="login-tabs">
+                <button class="tab-btn active" onclick="switchTab('login')">Giriş Yap</button>
+                <button class="tab-btn" onclick="switchTab('register')">Kayıt Ol</button>
+            </div>
+            
+            <!-- Giriş Formu -->
+            <div id="loginForm" class="form-container">
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="email">E-posta</label>
+                        <input type="email" id="email" required placeholder="ornek@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Şifre</label>
+                        <input type="password" id="password" required placeholder="********">
+                    </div>
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox"> Beni Hatırla
+                        </label>
+                        <a href="#" onclick="openForgotPasswordModal()">Şifremi Unuttum</a>
+                    </div>
+                    <button type="submit" class="submit-btn">Giriş Yap</button>
+                    <div id="loginMessage" class="message"></div>
+                </form>
+            </div>
+
+            <!-- Kayıt Formu -->
+            <div id="registerForm" class="form-container hidden">
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label for="regName">Ad Soyad</label>
+                        <input type="text" id="regName" required placeholder="Ad Soyad">
+                    </div>
+                    <div class="form-group">
+                        <label for="regEmail">E-posta</label>
+                        <input type="email" id="regEmail" required placeholder="ornek@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="regPassword">Şifre</label>
+                        <input type="password" id="regPassword" required placeholder="********">
+                    </div>
+                    <div class="form-group">
+                        <label for="regPasswordConfirm">Şifre Tekrar</label>
+                        <input type="password" id="regPasswordConfirm" required placeholder="********">
+                    </div>
+                    <div class="form-options">
+                        <label class="terms-checkbox">
+                            <input type="checkbox" id="termsCheckbox" required>
+                            <a href="#" onclick="openTerms()">Kullanıcı Sözleşmesi</a>'ni okudum ve kabul ediyorum
+                        </label>
+                    </div>
+                    <button type="submit" class="submit-btn">Kayıt Ol</button>
+                    <div id="registerMessage" class="message"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Test sonuçlarını sıfırla
+        localStorage.removeItem('testCompleted');
+        localStorage.removeItem('coffeeTestResults');
+
+        const questions = [
+            {
+                id: 'kahve_turu',
+                question: "Geleneksel kahve mi yoksa modern kahve mi tercih edersiniz?",
+                options: [
+                    { text: "Geleneksel kahve", value: "geleneksel" },
+                    { text: "Modern kahve", value: "modern" }
+                ]
+            },
+            {
+                id: 'kahve_icerigi',
+                question: "Kahvenizin içeriğinde ne olsun istersiniz?",
+                options: [
+                    { text: "Sadece kahve", value: "sade" },
+                    { text: "Kahve ve süt", value: "sutlu" },
+                    { text: "Kahve, süt ve şurup", value: "sutlu_suruplu" }
+                ],
+                showIf: (answers) => answers.kahve_turu === 'modern'
+            },
+            {
+                id: 'hazirlama_yontemi',
+                question: "Kahvenizi nasıl hazırlamak istersiniz?",
+                options: [
+                    { text: "Espresso makinesi", value: "espresso" },
+                    { text: "French Press", value: "french_press" },
+                    { text: "Chemex", value: "chemex" },
+                    { text: "Moka Pot", value: "moka_pot" },
+                    { text: "Soğuk demleme", value: "soguk_demleme" },
+                    { text: "Fark etmez", value: "fark_etmez" }
+                ],
+                showIf: (answers) => answers.kahve_turu === 'modern' && 
+                    !(answers.kahve_icerigi === 'sutlu_suruplu' && answers.sicaklik === 'soguk')
+            },
+            {
+                id: 'sicaklik',
+                question: "Kahvenizin sıcaklığı nasıl olsun?",
+                options: [
+                    { text: "Sıcak", value: "sicak" },
+                    { text: "Soğuk", value: "soguk" }
+                ],
+                showIf: (answers) => answers.kahve_turu === 'modern' && 
+                    !(answers.kahve_icerigi === 'sutlu_suruplu' && answers.sicaklik === 'soguk')
+            },
+            {
+                id: 'aroma',
+                question: "Kahvenizin içeriğinde özel bir aroma olsun mu?",
+                options: [
+                    { text: "Evet, özel aroma ekleyin", value: "aromali" },
+                    { text: "Hayır, sade olsun", value: "sade" }
+                ],
+                showIf: (answers) => answers.kahve_icerigi === 'sutlu_suruplu' && answers.sicaklik === 'sicak'
+            },
+            {
+                id: 'aroma_tipi',
+                question: "Hangi aromayı tercih edersiniz?",
+                options: [
+                    { text: "Çikolata", value: "cikolata" },
+                    { text: "Karamel", value: "karamel" },
+                    { text: "Fındık", value: "findik" },
+                    { text: "Vanilya", value: "vanilya" },
+                    { text: "Fark etmez", value: "fark_etmez" }
+                ],
+                showIf: (answers) => answers.aroma === 'aromali'
+            },
+            {
+                id: 'geleneksel_icerik',
+                question: "Kahvenizin içeriğinde ne olsun istersiniz?",
+                options: [
+                    { text: "Sade kahve", value: "sade" },
+                    { text: "Sütlü kahve", value: "sutlu" }
+                ],
+                showIf: (answers) => answers.kahve_turu === 'geleneksel'
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let userAnswers = {};
+
+        function getVisibleQuestions() {
+            return questions.filter(question => {
+                if (!question.showIf) return true;
+                return question.showIf(userAnswers);
+            });
+        }
+
+        function showQuestion(index) {
+            const questionsContainer = document.getElementById('questions-container');
+            const resultContainer = document.getElementById('result-container');
+            const prevButton = document.getElementById('prevButton');
+            const nextButton = document.getElementById('nextButton');
+            
+            // Sonuç konteynerini gizle
+            resultContainer.style.display = 'none';
+            
+            // Görünür soruları al
+            const visibleQuestions = getVisibleQuestions();
+            
+            if (index < visibleQuestions.length) {
+                const question = visibleQuestions[index];
+                
+                // İlerleme çubuğunu güncelle
+                const progressPercent = ((index + 1) / visibleQuestions.length) * 100;
+                document.getElementById('progress').style.width = `${progressPercent}%`;
+                
+                // Soruyu göster
+                questionsContainer.innerHTML = `
+                    <div class="question-container active">
+                        <h2 class="question">${question.question}</h2>
+                        <div class="options">
+                            ${question.options.map((option, optionIndex) => `
+                                <div class="option">
+                                    <input type="radio" 
+                                           id="q${question.id}_${optionIndex}" 
+                                           name="q${question.id}" 
+                                           value="${option.value}" 
+                                           ${userAnswers[question.id] === option.value ? 'checked' : ''}>
+                                    <label for="q${question.id}_${optionIndex}">${option.text}</label>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+
+                // Radio butonlarına tıklama olayı ekle
+                document.querySelectorAll(`input[name="q${question.id}"]`).forEach(input => {
+                    input.addEventListener('change', (e) => {
+                        userAnswers[question.id] = e.target.value;
+                        nextButton.disabled = false;
+                    });
+                });
+
+                // Navigasyon butonlarını güncelle
+                prevButton.disabled = index === 0;
+                nextButton.textContent = index === visibleQuestions.length - 1 ? 'Testi Tamamla' : 'Sonraki Soru';
+                nextButton.disabled = !userAnswers[question.id];
+            } else {
+                completeTest();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                showQuestion(currentQuestionIndex);
+            }
+        }
+
+        function nextQuestion() {
+            const visibleQuestions = getVisibleQuestions();
+            const currentQuestion = visibleQuestions[currentQuestionIndex];
+            
+            if (userAnswers[currentQuestion.id]) {
+                if (currentQuestionIndex < visibleQuestions.length - 1) {
+                    currentQuestionIndex++;
+                    showQuestion(currentQuestionIndex);
+                } else {
+                    completeTest();
+                }
+            } else {
+                alert('Lütfen bir seçenek seçin');
+            }
+        }
+
+        function completeTest() {
+            // Test sonuçlarını kaydet
+            sessionStorage.setItem('coffeeTestResults', JSON.stringify(userAnswers));
+            sessionStorage.setItem('testCompleted', 'true');
+
+            // Kullanıcı girişi kontrolü
+            const savedUser = localStorage.getItem('user');
+            if (!savedUser) {
+                // Kullanıcı giriş yapmamışsa login modalını aç
+                const loginModal = document.getElementById('loginModal');
+                if (loginModal) {
+                    loginModal.style.display = 'block';
+                    document.body.classList.add('modal-open');
+                }
+                return;
+            }
+
+            // Sonuç ekranını göster
+            const questionsContainer = document.getElementById('questions-container');
+            const resultContainer = document.getElementById('result-container');
+            const navButtons = document.querySelector('.nav-buttons');
+            const progressBar = document.querySelector('.progress-bar');
+            
+            questionsContainer.style.display = 'none';
+            navButtons.style.display = 'none';
+            progressBar.style.display = 'none';
+            resultContainer.style.display = 'block';
+
+            // Sonuçları göster
+            showResults();
+        }
+
+        // Sayfa yüklendiğinde testi başlat
+        window.addEventListener('DOMContentLoaded', () => {
+            // Test verilerini sıfırla
+            sessionStorage.removeItem('testCompleted');
+            sessionStorage.removeItem('coffeeTestResults');
+            userAnswers = {};
+            currentQuestionIndex = 0;
+            
+            // İlk soruyu göster
+            showQuestion(0);
+        });
+
+        function getRecommendedRecipes(results) {
+            const recommendations = new Set();
+            const reasons = new Set();
+
+            const preferences = {
+                temperature: results[0],
+                strength: results[1],
+                milk: results[2],
+                sweetness: results[3],
+                equipment: results[4],
+                flavor: results[5],
+                flavorType: results[6],
+                traditional: results[7]
+            };
+
+            // Geleneksel kahve tercihi
+            if (preferences.traditional === 'geleneksel') {
+                recommendations.add({
+                    name: 'Türk Kahvesi',
+                    file: 'turkish-coffee.html',
+                    image: 'images/recipes/turkish-coffee.jpg',
+                    description: 'İnce öğütülmüş kahve çekirdeklerinin cezve içinde su ile kaynatılmasıyla hazırlanan, köpüklü ve aromatik bir içecek'
+                });
+                return {
+                    recipes: Array.from(recommendations),
+                    reason: 'Geleneksel kahve tercihinize uygun öneriler:'
+                };
+            }
+
+            // Ekipman bazlı öneriler
+            switch(preferences.equipment) {
+                case 'espresso_makinesi':
+                    if (preferences.temperature === 'soguk') {
+                        if (preferences.milk === 'sutlu') {
+                            // Tatlı tercih edilmişse tüm aromalı kahveleri öner
+                            if (preferences.sweetness === 'tatli') {
+                                recommendations.add({
+                                    name: 'Iced Mocha',
+                                    file: 'iced-mocha.html',
+                                    image: 'images/recipes/iced-mocha.jpg',
+                                    description: 'Soğuk süt, espresso ve çikolatanın ferahlatıcı buluşması'
+                                });
+                                recommendations.add({
+                                    name: 'Iced Caramel Macchiato',
+                                    file: 'iced-caramel-macchiato.html',
+                                    image: 'images/recipes/iced-caramel-macchiato.jpg',
+                                    description: 'Soğuk süt, espresso ve karamel sosunun ferahlatıcı uyumu'
+                                });
+                                recommendations.add({
+                                    name: 'Iced Fındıklı Mocha',
+                                    file: 'iced-findikli-mocha.html',
+                                    image: 'images/recipes/iced-findikli-mocha.jpg',
+                                    description: 'Soğuk süt, espresso ve fındık şurubunun ferahlatıcı uyumu'
+                                });
+                                recommendations.add({
+                                    name: 'Iced Vanilla Latte',
+                                    file: 'iced-vanilla-latte.html',
+                                    image: 'images/recipes/iced-vanilla-latte.jpg',
+                                    description: 'Soğuk süt, espresso ve vanilya şurubunun ferahlatıcı uyumu'
+                                });
+                            } else if (preferences.flavor === 'aromali') {
+                                // Aromalı seçilmişse sadece seçilen aromayı öner
+                                switch(preferences.flavorType) {
+                                    case 'cikolatali':
+                                        recommendations.add({
+                                            name: 'Iced Mocha',
+                                            file: 'iced-mocha.html',
+                                            image: 'images/recipes/iced-mocha.jpg',
+                                            description: 'Soğuk süt, espresso ve çikolatanın ferahlatıcı buluşması'
+                                        });
+                                        break;
+                                    case 'karamelli':
+                                        recommendations.add({
+                                            name: 'Iced Caramel Macchiato',
+                                            file: 'iced-caramel-macchiato.html',
+                                            image: 'images/recipes/iced-caramel-macchiato.jpg',
+                                            description: 'Soğuk süt, espresso ve karamel sosunun ferahlatıcı uyumu'
+                                        });
+                                        break;
+                                    case 'findikli':
+                                        recommendations.add({
+                                            name: 'Iced Fındıklı Mocha',
+                                            file: 'iced-findikli-mocha.html',
+                                            image: 'images/recipes/iced-findikli-mocha.jpg',
+                                            description: 'Soğuk süt, espresso ve fındık şurubunun ferahlatıcı uyumu'
+                                        });
+                                        break;
+                                    case 'vanilyali':
+                                        recommendations.add({
+                                            name: 'Iced Vanilla Latte',
+                                            file: 'iced-vanilla-latte.html',
+                                            image: 'images/recipes/iced-vanilla-latte.jpg',
+                                            description: 'Soğuk süt, espresso ve vanilya şurubunun ferahlatıcı uyumu'
+                                        });
+                                        break;
+                                }
+                            } else {
+                                // Sade kahve tercihi
+                                recommendations.add({
+                                    name: 'Iced Latte',
+                                    file: 'iced-latte.html',
+                                    image: 'images/recipes/iced-latte.jpg',
+                                    description: 'Soğuk süt ve espresso ile hazırlanan ferahlatıcı içecek'
+                                });
+                            }
+                        } else {
+                            recommendations.add({
+                                name: 'Iced Americano',
+                                file: 'iced-americano.html',
+                                image: 'images/recipes/iced-americano.jpg',
+                                description: 'Espresso ve soğuk su ile hazırlanan ferahlatıcı içecek'
+                            });
+                        }
+                    } else {
+                        if (preferences.milk === 'sutlu') {
+                            // Tatlı tercih edilmişse tüm aromalı kahveleri öner
+                            if (preferences.sweetness === 'tatli') {
+                                recommendations.add({
+                                    name: 'Mocha',
+                                    file: 'mocha.html',
+                                    image: 'images/recipes/mocha.jpg',
+                                    description: 'Espresso, sıcak süt ve çikolatanın lezzetli buluşması'
+                                });
+                                recommendations.add({
+                                    name: 'Karamel Macchiato',
+                                    file: 'caramel-macchiato.html',
+                                    image: 'images/recipes/caramel-macchiato.jpg',
+                                    description: 'Karamel soslu, süt köpüklü espresso keyfi'
+                                });
+                                recommendations.add({
+                                    name: 'Fındıklı Mocha',
+                                    file: 'findikli-mocha.html',
+                                    image: 'images/recipes/findikli-mocha.jpg',
+                                    description: 'Espresso, sıcak çikolata, süt ve fındık şurubunun muhteşem uyumu'
+                                });
+                                recommendations.add({
+                                    name: 'Vanilya Latte',
+                                    file: 'vanilla-latte.html',
+                                    image: 'images/recipes/vanilla-latte.jpg',
+                                    description: 'Vanilya şurubu ile tatlandırılmış, sütlü ve aromalı bir kahve deneyimi'
+                                });
+                            } else if (preferences.flavor === 'aromali') {
+                                // Aromalı seçilmişse sadece seçilen aromayı öner
+                                switch(preferences.flavorType) {
+                                    case 'cikolatali':
+                                        recommendations.add({
+                                            name: 'Mocha',
+                                            file: 'mocha.html',
+                                            image: 'images/recipes/mocha.jpg',
+                                            description: 'Espresso, sıcak süt ve çikolatanın lezzetli buluşması'
+                                        });
+                                        break;
+                                    case 'karamelli':
+                                        recommendations.add({
+                                            name: 'Karamel Macchiato',
+                                            file: 'caramel-macchiato.html',
+                                            image: 'images/recipes/caramel-macchiato.jpg',
+                                            description: 'Karamel soslu, süt köpüklü espresso keyfi'
+                                        });
+                                        break;
+                                    case 'findikli':
+                                        recommendations.add({
+                                            name: 'Fındıklı Mocha',
+                                            file: 'findikli-mocha.html',
+                                            image: 'images/recipes/findikli-mocha.jpg',
+                                            description: 'Espresso, sıcak çikolata, süt ve fındık şurubunun muhteşem uyumu'
+                                        });
+                                        break;
+                                    case 'vanilyali':
+                                        recommendations.add({
+                                            name: 'Vanilya Latte',
+                                            file: 'vanilla-latte.html',
+                                            image: 'images/recipes/vanilla-latte.jpg',
+                                            description: 'Vanilya şurubu ile tatlandırılmış, sütlü ve aromalı bir kahve deneyimi'
+                                        });
+                                        break;
+                                }
+                            } else {
+                                // Sade kahve tercihi
+                                recommendations.add({
+                                    name: 'Latte',
+                                    file: 'latte.html',
+                                    image: 'images/recipes/latte.jpg',
+                                    description: 'Kadifemsi süt köpüğü ve yoğun espresso ile hazırlanan, dengeli ve kremamsı bir latte deneyimi'
+                                });
+                            }
+                        } else {
+                            recommendations.add({
+                                name: 'Espresso',
+                                file: 'espresso.html',
+                                image: 'images/recipes/espresso.jpg',
+                                description: 'Yüksek basınçla hazırlanan, yoğun ve aromalı kahve deneyimi'
+                            });
+                        }
+                    }
+                    break;
+
+                case 'french_press':
+                    if (preferences.temperature === 'soguk') {
+                        recommendations.add({
+                            name: 'Cold Brew French Press',
+                            file: 'cold-brew-french-press.html',
+                            image: 'images/recipes/cold-brew-french-press.jpg',
+                            description: 'French Press ile hazırlanan soğuk demleme kahve'
+                        });
+                    } else {
+                        recommendations.add({
+                            name: 'French Press Kahvesi',
+                            file: 'french-press.html',
+                            image: 'images/recipes/french-press.jpg',
+                            description: 'Zengin ve tam gövdeli bir kahve deneyimi'
+                        });
+                    }
+                    break;
+
+                case 'moka_pot':
+                    if (preferences.temperature === 'soguk') {
+                        recommendations.add({
+                            name: 'Iced Moka Pot',
+                            file: 'iced-moka-pot.html',
+                            image: 'images/recipes/iced-moka-pot.jpg',
+                            description: 'Moka Pot ile hazırlanan kahvenin soğuk versiyonu'
+                        });
+                    } else {
+                        recommendations.add({
+                            name: 'Moka Pot Kahvesi',
+                            file: 'moka-pot.html',
+                            image: 'images/recipes/moka-pot.jpg',
+                            description: 'İtalyan usulü yoğun ve aromalı kahve'
+                        });
+                    }
+                    break;
+
+                case 'pour_over':
+                    if (preferences.temperature === 'soguk') {
+                        recommendations.add({
+                            name: 'Iced Pour Over',
+                            file: 'iced-pour-over.html',
+                            image: 'images/recipes/iced-pour-over.jpg',
+                            description: 'Pour Over tekniği ile hazırlanan soğuk kahve'
+                        });
+                    } else {
+                        recommendations.add({
+                            name: 'Pour Over Kahve',
+                            file: 'pour-over.html',
+                            image: 'images/recipes/pour-over.jpg',
+                            description: 'Hassas demleme tekniği ile hazırlanan, temiz ve net bir kahve deneyimi'
+                        });
+                    }
+                    break;
+
+                case 'cezve':
+                    if (preferences.temperature === 'soguk') {
+                        recommendations.add({
+                            name: 'Soğuk Türk Kahvesi',
+                            file: 'cold-turkish-coffee.html',
+                            image: 'images/recipes/cold-turkish-coffee.jpg',
+                            description: 'Geleneksel Türk kahvesinin soğuk versiyonu'
+                        });
+                    } else {
+                        recommendations.add({
+                            name: 'Türk Kahvesi',
+                            file: 'turkish-coffee.html',
+                            image: 'images/recipes/turkish-coffee.jpg',
+                            description: 'İnce öğütülmüş kahve çekirdeklerinin cezve içinde su ile kaynatılmasıyla hazırlanan, köpüklü ve aromatik bir içecek'
+                        });
+                    }
+                    break;
+
+                case 'filtre_makinesi':
+                    if (preferences.temperature === 'soguk') {
+                        recommendations.add({
+                            name: 'Iced Filtre Kahve',
+                            file: 'iced-filtre-kahve.html',
+                            image: 'images/recipes/iced-filtre-kahve.jpg',
+                            description: 'Filtre kahvenin soğuk versiyonu'
+                        });
+                    } else {
+                        recommendations.add({
+                            name: 'Filtre Kahve',
+                            file: 'filtre-kahve.html',
+                            image: 'images/recipes/filtre-kahve.jpg.png',
+                            description: 'Taze çekilmiş kahve çekirdekleri ile hazırlanan, aromatik ve dengeli bir filtre kahve deneyimi'
+                        });
+                    }
+                    break;
+
+                case 'fark_etmez':
+                    if (preferences.temperature === 'soguk') {
+                        recommendations.add({
+                            name: 'Cold Brew',
+                            file: 'cold-brew.html',
+                            image: 'images/recipes/cold-brew.jpg',
+                            description: '12 saat soğuk demleme ile hazırlanan, yumuşak içimli kahve'
+                        });
+                    } else {
+                        recommendations.add({
+                            name: 'Türk Kahvesi',
+                            file: 'turkish-coffee.html',
+                            image: 'images/recipes/turkish-coffee.jpg',
+                            description: 'Sadece cezve gerektiren, geleneksel ve lezzetli bir kahve deneyimi'
+                        });
+                    }
+                    break;
+            }
+
+            const recommendationsArray = Array.from(recommendations);
+            return {
+                recipes: recommendationsArray.slice(0, 5),
+                reason: 'Tercihlerinize en uygun kahve önerileri:'
+            };
+        }
+
+        function showResults() {
+            if (!isUserLoggedIn()) {
+                if (document.getElementById('loginModal')) {
+                    document.getElementById('loginModal').style.display = 'block';
+                    document.body.classList.add('modal-open');
+                }
+                document.getElementById('result-container').style.display = 'none';
+                return;
+            }
+            const resultContainer = document.getElementById('result-container');
+            resultContainer.innerHTML = '';
+
+            let recipes = [];
+            let recommendationText = '';
+
+            // Geleneksel kahve seçilmişse
+            if (userAnswers.kahve_turu === 'geleneksel') {
+                if (userAnswers.geleneksel_icerik === 'sade') {
+                    recipes = [
+                        {
+                            name: "Türk Kahvesi",
+                            description: "Geleneksel Türk kahvesi deneyimi",
+                            file: "turkish-coffee.html",
+                            image: "images/recipes/turkish-coffee.jpg"
+                        },
+                        {
+                            name: "Dibek Kahvesi",
+                            description: "Taş değirmende öğütülmüş geleneksel Türk kahvesi",
+                            file: "dibek-coffee.html",
+                            image: "images/recipes/dibek-coffee.jpg"
+                        }
+                    ];
+                    recommendationText = 'Size Özel Geleneksel Kahve Tariflerimiz:';
+                } else {
+                    recipes = [
+                        {
+                            name: "Menengiç Kahvesi",
+                            description: "Antep fıstığı çekirdeğinden yapılan geleneksel kahve",
+                            file: "menengic-coffee.html",
+                            image: "images/recipes/menengic.jpg"
+                        }
+                    ];
+                    recommendationText = 'Size Özel Menengiç Kahvesi Tarifimiz:';
+                }
+            }
+            // Modern kahve seçilmişse
+            else {
+                const content = userAnswers.kahve_icerigi;
+                const method = userAnswers.hazirlama_yontemi;
+                const temperature = userAnswers.sicaklik;
+
+                // Soğuk demleme ile sıcak kahve seçimi uyumsuzluğu kontrolü
+                if (method === 'soguk_demleme' && temperature === 'sicak') {
+                    const noResults = document.createElement('p');
+                    noResults.textContent = 'Soğuk demleme yöntemi sadece soğuk kahve hazırlamak için kullanılabilir. Lütfen farklı bir seçim yapın.';
+                    resultContainer.appendChild(noResults);
+                    
+                    const restartButton = document.createElement('button');
+                    restartButton.textContent = 'Testi Yeniden Başlat';
+                    restartButton.className = 'nav-button';
+                    restartButton.onclick = () => {
+                        window.location.reload();
+                    };
+                    resultContainer.appendChild(restartButton);
+                    return;
+                }
+
+                // Sade kahve seçilmişse
+                if (content === 'sade') {
+                    if (temperature === 'sicak') {
+                        recipes = [
+                            {
+                                name: "Filtre Kahve",
+                                description: "Temiz ve net bir kahve deneyimi",
+                                file: "filtre-kahve.html",
+                                image: "images/recipes/filtre-kahve.jpg.png"
+                            },
+                            {
+                                name: "Americano",
+                                description: "Espresso ve sıcak su ile hazırlanan dengeli kahve",
+                                file: "americano.html",
+                                image: "images/recipes/americano.jpg"
+                            },
+                            {
+                                name: "Espresso",
+                                description: "Yoğun ve aromalı kahve deneyimi",
+                                file: "espresso.html",
+                                image: "images/recipes/espresso.jpg"
+                            },
+                            {
+                                name: "Ristretto",
+                                description: "Espressonun daha yoğun versiyonu",
+                                file: "ristretto.html",
+                                image: "images/recipes/ristretto.jpg"
+                            }
+                        ];
+                    } else {
+                        recipes = [
+                            {
+                                name: "Cold Brew",
+                                description: "Soğuk demleme ile hazırlanan yumuşak içimli kahve",
+                                file: "cold-brew.html",
+                                image: "images/recipes/cold-brew.jpg"
+                            }
+                        ];
+                    }
+                    recommendationText = 'Size Özel Sade Kahve Tariflerimiz:';
+                }
+                // Sütlü kahve seçilmişse
+                else if (content === 'sutlu') {
+                    if (temperature === 'sicak') {
+                        recipes = [
+                            {
+                                name: "Latte",
+                                description: "Süt ve kahvenin mükemmel uyumu",
+                                file: "latte.html",
+                                image: "images/recipes/latte.jpg"
+                            },
+                            {
+                                name: "Cappuccino",
+                                description: "İtalyan usulü köpüklü kahve",
+                                file: "cappuccino.html",
+                                image: "images/recipes/cappuccino.jpg"
+                            },
+                            {
+                                name: "Flat White",
+                                description: "İnce süt köpüğü ile hazırlanan yoğun kahve",
+                                file: "flat-white.html",
+                                image: "images/recipes/flat-white.jpg"
+                            }
+                        ];
+                    } else {
+                        recipes = [
+                            {
+                                name: "Iced Latte",
+                                description: "Soğuk sütlü kahve",
+                                file: "iced-latte.html",
+                                image: "images/recipes/iced-latte.jpg"
+                            }
+                        ];
+                    }
+                    recommendationText = 'Size Özel Sütlü Kahve Tariflerimiz:';
+                }
+                // Sütlü ve şuruplu kahve seçilmişse
+                else if (content === 'sutlu_suruplu') {
+                    if (temperature === 'sicak' && userAnswers.aroma === 'aromali') {
+                        if (userAnswers.aroma_tipi === 'fark_etmez' || !userAnswers.aroma_tipi) {
+                            recipes = [
+                                {
+                                    name: "Mocha",
+                                    description: "Kahve ve çikolatanın buluşması",
+                                    file: "mocha.html",
+                                    image: "images/recipes/mocha.jpg"
+                                },
+                                {
+                                    name: "Karamel Macchiato",
+                                    description: "Karamelli ve köpüklü",
+                                    file: "caramel-macchiato.html",
+                                    image: "images/recipes/caramel-macchiato.jpg"
+                                },
+                                {
+                                    name: "Fındıklı Mocha",
+                                    description: "Fındık aromalı kahve deneyimi",
+                                    file: "hazelnut-mocha.html",
+                                    image: "images/recipes/hazelnut-mocha.jpg"
+                                },
+                                {
+                                    name: "Vanilyalı Latte",
+                                    description: "Vanilya aromalı kahve keyfi",
+                                    file: "vanilla-latte.html",
+                                    image: "images/recipes/vanilla-latte.jpg"
+                                }
+                            ];
+                        } else {
+                            const aromaMap = {
+                                cikolata: {
+                                    name: "Mocha",
+                                    description: "Kahve ve çikolatanın buluşması",
+                                    file: "mocha.html",
+                                    image: "images/recipes/mocha.jpg"
+                                },
+                                karamel: {
+                                    name: "Karamel Macchiato",
+                                    description: "Karamelli ve köpüklü",
+                                    file: "caramel-macchiato.html",
+                                    image: "images/recipes/caramel-macchiato.jpg"
+                                },
+                                findik: {
+                                    name: "Fındıklı Mocha",
+                                    description: "Fındık aromalı kahve deneyimi",
+                                    file: "hazelnut-mocha.html",
+                                    image: "images/recipes/hazelnut-mocha.jpg"
+                                },
+                                vanilya: {
+                                    name: "Vanilyalı Latte",
+                                    description: "Vanilya aromalı kahve keyfi",
+                                    file: "vanilla-latte.html",
+                                    image: "images/recipes/vanilla-latte.jpg"
+                                }
+                            };
+                            recipes = [aromaMap[userAnswers.aroma_tipi]];
+                        }
+                        recommendationText = 'Size Özel Aromalı Kahve Tariflerimiz:';
+                    } else if (temperature === 'soguk') {
+                        recipes = [
+                            {
+                                name: "Frappuccino",
+                                description: "Soğuk ve buzlu kahve deneyimi",
+                                file: "frappuccino.html",
+                                image: "images/recipes/frappuccino.jpg"
+                            },
+                            {
+                                name: "Affogato",
+                                description: "Dondurma ve espresso buluşması",
+                                file: "affogato.html",
+                                image: "images/recipes/affogato.jpg"
+                            }
+                        ];
+                        recommendationText = 'Size Özel Soğuk Kahve Tariflerimiz:';
+                    }
+                }
+            }
+
+            // Başlık ekle
+            const title = document.createElement('h2');
+            title.textContent = recommendationText;
+            resultContainer.appendChild(title);
+
+            // Tarifleri göster
+            if (recipes && recipes.length > 0) {
+                const recipeGrid = document.createElement('div');
+                recipeGrid.className = 'recipe-grid';
+
+                recipes.forEach(recipe => {
+                    const recipeCard = createRecipeCard(recipe);
+                    recipeGrid.appendChild(recipeCard);
+                });
+
+                resultContainer.appendChild(recipeGrid);
+            } else {
+                const noResults = document.createElement('p');
+                noResults.textContent = 'Seçimlerinize uygun tarif bulunamadı. Lütfen farklı seçimler yapın.';
+                resultContainer.appendChild(noResults);
+            }
+
+            // Yeniden başlat butonu ekle
+            const restartButton = document.createElement('button');
+            restartButton.textContent = 'Testi Yeniden Başlat';
+            restartButton.className = 'nav-button';
+            restartButton.onclick = () => {
+                window.location.reload();
+            };
+            resultContainer.appendChild(restartButton);
+        }
+
+        function createRecipeCard(recipe) {
+            const card = document.createElement('div');
+            card.className = 'recipe-card';
+
+            // Tarif resmi
+            if (recipe.image) {
+                const image = document.createElement('img');
+                image.src = recipe.image;
+                image.alt = recipe.name;
+                image.className = 'recipe-image';
+                card.appendChild(image);
+            }
+
+            // Tarif başlığı ve bağlantısı
+            const title = document.createElement('div');
+            title.className = 'recipe-title';
+            const link = document.createElement('a');
+            link.href = recipe.file;
+            link.textContent = recipe.name;
+            link.style.textDecoration = 'none';
+            link.style.color = 'inherit';
+            title.appendChild(link);
+            card.appendChild(title);
+
+            // Tarif açıklaması
+            const description = document.createElement('div');
+            description.className = 'recipe-description';
+            description.textContent = recipe.description;
+            card.appendChild(description);
+
+            // Tarif detayları butonu
+            const detailsButton = document.createElement('a');
+            detailsButton.href = recipe.file;
+            detailsButton.className = 'recipe-btn';
+            detailsButton.textContent = 'Tarifi Gör';
+            card.appendChild(detailsButton);
+
+            // Modern favori butonu
+            const favoriteBtn = document.createElement('button');
+            favoriteBtn.className = 'favorite-icon-btn';
+            favoriteBtn.setAttribute('data-recipe', recipe.file);
+            favoriteBtn.innerHTML = '<i class="fa-regular fa-heart"></i><span class="tooltip">Favorilere Ekle</span>';
+            updateSingleFavoriteButton(favoriteBtn);
+            favoriteBtn.onclick = function(e) {
+                e.preventDefault();
+                if (!isUserLoggedIn()) {
+                    if (document.getElementById('loginModal')) {
+                        document.getElementById('loginModal').style.display = 'block';
+                        document.body.classList.add('modal-open');
+                    }
+                    return;
+                }
+                toggleFavorite(recipe.file);
+                updateSingleFavoriteButton(favoriteBtn);
+            };
+            card.appendChild(favoriteBtn);
+
+            return card;
+        }
+
+        function openProfileModal() {
+            const profileModal = document.getElementById('profileModal');
+            const savedUser = JSON.parse(localStorage.getItem('user'));
+            if (savedUser) {
+                document.getElementById('profileName').value = savedUser.name;
+                document.getElementById('profileEmail').value = savedUser.email;
+            }
+            profileModal.style.display = 'flex';
+            document.body.classList.add('modal-open');
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profileModal').style.display = 'none';
+            document.body.classList.remove('modal-open');
+        }
+
+        function addToFavorites(recipeFile) {
+            const user = localStorage.getItem('user');
+            if (!user) {
+                alert('Favorilere eklemek için giriş yapmalısınız!');
+                return;
+            }
+            let favorites = JSON.parse(localStorage.getItem('favorites') || '{}');
+            const email = JSON.parse(user).email;
+            if (!favorites[email]) favorites[email] = [];
+            if (!favorites[email].includes(recipeFile)) {
+                favorites[email].push(recipeFile);
+                localStorage.setItem('favorites', JSON.stringify(favorites));
+                alert('Tarif favorilere eklendi!');
+            } else {
+                alert('Bu tarif zaten favorilerde!');
+            }
+        }
+
+        function isUserLoggedIn() {
+            return !!localStorage.getItem('user');
+        }
+
+        function updateSingleFavoriteButton(btn) {
+            const recipeFile = btn.getAttribute('data-recipe');
+            if (isRecipeFavorite(recipeFile)) {
+                btn.querySelector('i').className = 'fa-solid fa-heart';
+                btn.querySelector('i').style.color = '#e74c3c';
+                btn.querySelector('.tooltip').textContent = 'Favorilerden Çıkar';
+            } else {
+                btn.querySelector('i').className = 'fa-regular fa-heart';
+                btn.querySelector('i').style.color = '#8B6B4E';
+                btn.querySelector('.tooltip').textContent = 'Favorilere Ekle';
+            }
+        }
+
+        function isRecipeFavorite(recipeFile) {
+            const user = localStorage.getItem('user');
+            if (!user) return false;
+            let favorites = JSON.parse(localStorage.getItem('favorites') || '{}');
+            const email = JSON.parse(user).email;
+            return favorites[email] && favorites[email].includes(recipeFile);
+        }
+
+        function toggleFavorite(recipeFile) {
+            const user = localStorage.getItem('user');
+            if (!user) return;
+            let favorites = JSON.parse(localStorage.getItem('favorites') || '{}');
+            const email = JSON.parse(user).email;
+            if (!favorites[email]) favorites[email] = [];
+            if (favorites[email].includes(recipeFile)) {
+                favorites[email] = favorites[email].filter(f => f !== recipeFile);
+            } else {
+                favorites[email].push(recipeFile);
+            }
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            // Mevcut sayfanın yolunu al
+            const currentPath = window.location.pathname;
+            // Eğer index.html'de değilsek, index.html'e yönlendir
+            if (!currentPath.endsWith('index.html')) {
+                window.location.href = 'index.html';
+            } else {
+                // index.html'deyse sayfayı yenile
+                window.location.reload();
+            }
+        }
+
+        function updateNavbarAuthUI() {
+            const user = localStorage.getItem('user');
+            const profileBtn = document.querySelector('.profile-button');
+            const logoutBtn = document.querySelector('.logout-button');
+            const loginBtn = document.querySelector('.login-btn');
+            if (user) {
+                if (profileBtn) profileBtn.style.display = 'flex';
+                if (logoutBtn) logoutBtn.style.display = 'flex';
+                if (loginBtn) loginBtn.style.display = 'none';
+            } else {
+                if (profileBtn) profileBtn.style.display = 'none';
+                if (logoutBtn) logoutBtn.style.display = 'none';
+                if (loginBtn) loginBtn.style.display = 'flex';
+            }
+        }
+        window.addEventListener('DOMContentLoaded', updateNavbarAuthUI);
+
+        function showResultsAfterLogin() {
+            const questionsContainer = document.getElementById('questions-container');
+            const resultContainer = document.getElementById('result-container');
+            const navButtons = document.querySelector('.nav-buttons');
+            const progressBar = document.querySelector('.progress-bar');
+            
+            questionsContainer.style.display = 'none';
+            navButtons.style.display = 'none';
+            progressBar.style.display = 'none';
+            resultContainer.style.display = 'block';
+
+            // Sonuçları göster
+            showResults();
+        }
+
+        // Login başarılı olduğunda test sonuçlarını göster
+        window.addEventListener('loginSuccess', function() {
+            const testCompleted = sessionStorage.getItem('testCompleted');
+            if (testCompleted === 'true') {
+                showResultsAfterLogin();
+            }
+        });
+
+        function openLoginModal() {
+            const loginModal = document.getElementById('loginModal');
+            if (loginModal) {
+                loginModal.style.display = 'block';
+                document.body.classList.add('modal-open');
+            }
+        }
+
+        function closeLoginModal() {
+            const loginModal = document.getElementById('loginModal');
+            if (loginModal) {
+                loginModal.style.display = 'none';
+                document.body.classList.remove('modal-open');
+            }
+        }
+
+        function switchTab(tab) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const loginMessage = document.getElementById('loginMessage');
+            const registerMessage = document.getElementById('registerMessage');
+            const tabs = document.querySelectorAll('.tab-btn');
+            
+            // Mesaj kutularını temizle
+            if (loginMessage) loginMessage.textContent = '';
+            if (loginMessage) loginMessage.style.display = 'none';
+            if (registerMessage) registerMessage.textContent = '';
+            if (registerMessage) registerMessage.style.display = 'none';
+            
+            tabs.forEach(t => t.classList.remove('active'));
+            
+            if (tab === 'login') {
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                tabs[0].classList.add('active');
+                // Formları temizle
+                document.getElementById('loginForm').reset();
+            } else {
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+                tabs[1].classList.add('active');
+                // Formları temizle
+                document.getElementById('registerForm').reset();
+            }
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const messageDiv = document.getElementById('loginMessage');
+            
+            try {
+                const response = await fetch('http://127.0.0.1:5000/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        email: email, 
+                        password: password 
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    
+                    messageDiv.textContent = 'Giriş başarılı!';
+                    messageDiv.className = 'message success';
+                    messageDiv.style.display = 'block';
+                    
+                    setTimeout(() => {
+                        closeLoginModal();
+                        // Login başarılı event'ini tetikle
+                        window.dispatchEvent(new Event('loginSuccess'));
+                    }, 1000);
+                } else {
+                    messageDiv.textContent = data.error || 'Giriş başarısız';
+                    messageDiv.className = 'message error';
+                    messageDiv.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Hata:', error);
+                messageDiv.textContent = 'Bağlantı hatası: Sunucuya ulaşılamıyor';
+                messageDiv.className = 'message error';
+                messageDiv.style.display = 'block';
+            }
+        }
+
+        async function handleRegister(event) {
+            event.preventDefault();
+            
+            const messageDiv = document.getElementById('registerMessage');
+            const termsCheckbox = document.getElementById('termsCheckbox');
+            
+            if (!termsCheckbox.checked) {
+                messageDiv.textContent = 'Lütfen kullanıcı sözleşmesini okuyup kabul edin.';
+                messageDiv.className = 'message error';
+                messageDiv.style.display = 'block';
+                return;
+            }
+            
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const passwordConfirm = document.getElementById('regPasswordConfirm').value;
+            
+            if (password !== passwordConfirm) {
+                messageDiv.textContent = 'Şifreler eşleşmiyor!';
+                messageDiv.className = 'message error';
+                messageDiv.style.display = 'block';
+                return;
+            }
+            
+            try {
+                const response = await fetch('http://127.0.0.1:5000/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        email: email,
+                        password: password
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    messageDiv.textContent = 'Kayıt başarılı! Giriş yapabilirsiniz.';
+                    messageDiv.className = 'message success';
+                    messageDiv.style.display = 'block';
+                    
+                    // Kayıt formunu temizle ve giriş formuna geç
+                    document.getElementById('registerForm').reset();
+                    switchTab('login');
+                } else {
+                    messageDiv.textContent = data.error || 'Kayıt başarısız';
+                    messageDiv.className = 'message error';
+                    messageDiv.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Hata:', error);
+                messageDiv.textContent = 'Bağlantı hatası: Sunucuya ulaşılamıyor';
+                messageDiv.className = 'message error';
+                messageDiv.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html> 

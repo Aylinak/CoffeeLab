@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoffeeLab - Fındıklı Mocha Tarifi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f5f5;
+            color: var(--text-color);
+            padding: 2rem;
+            min-height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-top: 80px;
+        }
+
+        .recipe-page {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 2rem;
+        }
+
+        .recipe-header {
+            width: 100%;
+            margin-bottom: 2rem;
+        }
+
+        .recipe-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            object-position: center;
+            border-radius: 15px;
+            display: block;
+        }
+
+        .recipe-content {
+            padding: 0 1rem;
+        }
+
+        .recipe-title {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .recipe-description {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .recipe-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .detail-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: #f8f8f8;
+            border-radius: 15px;
+        }
+
+        .detail-item i {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .detail-item h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-item p {
+            color: #666;
+        }
+
+        .recipe-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .ingredients ul, .instructions ol, .tips ul {
+            padding-left: 1.5rem;
+        }
+
+        .ingredients li, .instructions li, .tips li {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            margin-top: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #2b1502;
+            transform: translateY(-3px);
+        }
+
+        .equipment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .equipment-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8f8f8;
+            border-radius: 10px;
+        }
+
+        .equipment-item i {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        .equipment-item span {
+            font-weight: 500;
+        }
+
+        .instruction-step {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f8f8f8;
+            border-radius: 10px;
+        }
+
+        .instruction-step h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .instruction-step p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Üst çubuk stilleri */
+        .nav-container {
+            background: #8B6B4E;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+            opacity: 0.9;
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+        }
+
+        .nav-link.active {
+            opacity: 1;
+            font-weight: 600;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .profile-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            text-decoration: none;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+
+        .profile-button:hover {
+            opacity: 1;
+        }
+
+        .logout-button {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .video-section {
+            margin-top: 1rem;
+            padding: 0.7rem;
+            background: #f8f8f8;
+            border-radius: 15px;
+        }
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <!-- Üst çubuk -->
+    <nav class="nav-container">
+        <div class="nav-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-coffee"></i>
+                CoffeeLab
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Anasayfa</a>
+                <a href="recipes.html" class="nav-link active">Tarifler</a>
+                <a href="favorites.html" class="nav-link">Favoriler</a>
+            </div>
+            <div class="nav-right">
+                <a href="profile.html" class="profile-button">
+                    <i class="fas fa-user"></i>
+                    Profilim
+                </a>
+                <a href="#" class="logout-button" onclick="handleLogout(); return false;">Çıkış Yap</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="recipe-page">
+        <div class="recipe-header">
+            <img src="images/recipes/findikli-mocha.jpg" alt="Fındıklı Mocha" class="recipe-image">
+        </div>
+        <div class="recipe-content">
+            <h1 class="recipe-title">Fındıklı Mocha Tarifi</h1>
+            <p class="recipe-description">
+                Fındıklı Mocha, espresso, sıcak çikolata, süt ve fındık şurubunun muhteşem uyumuyla hazırlanan, zengin ve aromatik bir içecektir. Kahve ve çikolatanın yanı sıra fındık aromasıyla benzersiz bir lezzet sunar.
+            </p>
+            
+            <div class="recipe-details">
+                <div class="detail-item">
+                    <i class="fas fa-clock"></i>
+                    <h4>Hazırlama Süresi</h4>
+                    <p>5-7 dakika</p>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-fire"></i>
+                    <h4>Zorluk</h4>
+                    <p>Orta</p>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-coffee"></i>
+                    <h4>Porsiyon</h4>
+                    <p>1 kişilik</p>
+                </div>
+            </div>
+
+            <div class="recipe-section">
+                <h2 class="section-title">Malzemeler</h2>
+                <div class="ingredients">
+                    <ul>
+                        <li>18-21 gram taze çekilmiş espresso kahvesi</li>
+                        <li>150 ml taze süt (tam yağlı süt tercih edilir)</li>
+                        <li>2 yemek kaşığı sıcak çikolata tozu</li>
+                        <li>2 yemek kaşığı fındık şurubu</li>
+                        <li>İsteğe bağlı: krema ve rendelenmiş fındık</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="recipe-section">
+                <h2 class="section-title">Gerekli Ekipmanlar</h2>
+                <div class="equipment-list">
+                    <div class="equipment-item">
+                        <i class="fas fa-coffee"></i>
+                        <span>Espresso makinesi <b>veya</b> French Press</span>
+                    </div>
+                    <div class="equipment-item">
+                        <i class="fas fa-mug-hot"></i>
+                        <span>Mocha bardağı </span>
+                    </div>
+                    <div class="equipment-item">
+                        <i class="fas fa-temperature-high"></i>
+                        <span>Süt termometresi <b>veya</b> küçük tencere, tel çırpıcı</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recipe-section">
+                <h2 class="section-title">Hazırlanışı</h2>
+                <div style="display: flex; flex-wrap: wrap; gap: 2rem;">
+                    <div style="flex:1; min-width: 320px; background: #f8f8f8; border-radius: 15px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                        <h3 style="margin-top:0; color:var(--accent-color); font-size:1.15rem; margin-bottom:1.2rem;">Espresso Makinesiyle Fındıklı Mocha</h3>
+                        <ol style="padding-left:1.2rem;">
+                            <li style="margin-bottom:1rem;">Espresso makinesiyle 1 shot espresso hazırlayın.</li>
+                            <li style="margin-bottom:1rem;">Ayrı bir kapta sütü ısıtın ve buharlı çubukla güzelce köpürtün (70–75°C civarı).</li>
+                            <li style="margin-bottom:1rem;">Fincana önce bitter çikolatayı (veya kakaoyu) koyun, üzerine fındık şurubunu ve sıcak espressoyu dökün. İyice karıştırın.</li>
+                            <li style="margin-bottom:1rem;">Köpürttüğünüz sütü yavaşça fincana ekleyin, en üstüne süt köpüğünü bırakın.</li>
+                            <li>İsteğe bağlı olarak üzerine çırpılmış krema ve rendelenmiş fındık veya çikolata serpin.</li>
+                        </ol>
+                    </div>
+                    <div style="flex:1; min-width: 320px; background: #f8f8f8; border-radius: 15px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                        <h3 style="color:var(--accent-color); font-size:1.15rem; margin-bottom:1.2rem;">French Press ile Fındıklı Mocha (Makinesiz)</h3>
+                        <ol style="padding-left:1.2rem;">
+                            <li style="margin-bottom:1rem;">French press içine kahveyi koyun, 100 ml sıcak su ekleyin, 4 dakika demleyin. Ardından bastırın.</li>
+                            <li style="margin-bottom:1rem;">Sütü küçük bir tencerede ısıtın ama kaynatmayın. Tel çırpıcıyla çırparak köpürtün ya da sütü French press içine koyup 10–15 kez bastırarak köpük elde edin.</li>
+                            <li style="margin-bottom:1rem;">Bir fincana kakao (veya çikolata), fındık ezmesi (veya şurubu) ve şekeri koyun. Üzerine demlediğiniz kahveyi dökün ve iyice karıştırın.</li>
+                            <li style="margin-bottom:1rem;">Üzerine sütü yavaşça ekleyin, en üstüne köpüğü koyun.</li>
+                            <li>Üzeri için krema ve süslemeleri ekleyin.</li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="timer-section" style="margin-top:2rem; text-align:center;">
+                    <h2 class="section-title">4 Dakikalık Demleme Zamanlayıcısı</h2>
+                    <div id="timer-display" style="font-size:2rem; margin:1rem 0; font-weight:bold;">04:00</div>
+                    <button onclick="startTimer()" style="padding:0.5rem 1.2rem; margin:0 0.5rem; border-radius:8px; border:none; background:#8B6B4E; color:white; font-weight:600;">Başlat</button>
+                    <button onclick="pauseTimer()" style="padding:0.5rem 1.2rem; margin:0 0.5rem; border-radius:8px; border:none; background:#bfa074; color:white; font-weight:600;">Duraklat</button>
+                    <button onclick="resetTimer()" style="padding:0.5rem 1.2rem; margin:0 0.5rem; border-radius:8px; border:none; background:#555; color:white; font-weight:600;">Sıfırla</button>
+                </div>
+                <script>
+                let timer;
+                let timeLeft = 240;
+                let running = false;
+                function updateDisplay() {
+                  const min = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+                  const sec = String(timeLeft % 60).padStart(2, '0');
+                  document.getElementById('timer-display').textContent = `${min}:${sec}`;
+                }
+                function startTimer() {
+                  if (running) return;
+                  running = true;
+                  timer = setInterval(() => {
+                    if (timeLeft > 0) {
+                      timeLeft--;
+                      updateDisplay();
+                    } else {
+                      clearInterval(timer);
+                      running = false;
+                      alert('Süre doldu! Demleme tamam.');
+                    }
+                  }, 1000);
+                }
+                function pauseTimer() {
+                  clearInterval(timer);
+                  running = false;
+                }
+                function resetTimer() {
+                  clearInterval(timer);
+                  timeLeft = 240;
+                  updateDisplay();
+                  running = false;
+                }
+                updateDisplay();
+                </script>
+            </div>
+
+            <div class="recipe-section">
+                <h2 class="section-title">Püf Noktaları</h2>
+                <div class="tips-container">
+                    <ul class="tips-list">
+                        <li><i class="fas fa-lightbulb"></i> French press kahvesi espresso kadar yoğun olmadığından biraz daha az süt kullanabilirsiniz.</li>
+                        <li><i class="fas fa-lightbulb"></i> Fındık şurubu kullanıyorsanız ekstra şeker eklemenize gerek yok.</li>
+                        <li><i class="fas fa-lightbulb"></i> Kahveyi French press için çok kalın çekilmiş kullanırsanız lezzeti zayıf olur, mümkünse orta-ince çekim tercih edin.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="video-section">
+                <h2 class="section-title">Video Tarifi</h2>
+                <div class="video-container">
+                    <video controls>
+                        <source src="videos/findikli_mocha_tarif_videosu.mp4" type="video/mp4">
+                        Tarayıcınız video oynatmayı desteklemiyor.
+                    </video>
+                </div>
+            </div>
+
+            <a href="recipes.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Tariflere Dön
+            </a>
+        </div>
+    </div>
+</body>
+</html> 
