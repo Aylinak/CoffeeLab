@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoffeeLab - Favorilerim</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background: #f5f3f0;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .favorites-container { 
+            max-width: 900px; 
+            margin: 100px auto; 
+            background: #fff; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+            padding: 2rem; 
+        }
+        .favorites-title { 
+            font-size: 2rem; 
+            color: var(--primary-color); 
+            text-align: center; 
+            margin-bottom: 2rem; 
+        }
+        .favorites-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 2rem; 
+        }
+        .favorite-card { 
+            background: #f8f8f8; 
+            border-radius: 16px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.10); 
+            padding-bottom: 2rem; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            position: relative;
+        }
+        .favorite-image { 
+            width: 100%; 
+            height: 200px; 
+            object-fit: cover; 
+            border-top-left-radius: 16px; 
+            border-top-right-radius: 16px; 
+        }
+        .favorite-title { 
+            font-size: 1.3rem; 
+            color: #2d3a2d; 
+            font-weight: bold; 
+            margin: 1.2rem 0 0.5rem 0; 
+            text-align: center; 
+        }
+        .favorite-btn, .remove-favorite-btn { 
+            display: block; 
+            width: 80%; 
+            margin: 0.5rem auto; 
+            padding: 0.7rem 0; 
+            background: #4a2c0a; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 25px; 
+            font-size: 1rem; 
+            font-weight: 500; 
+            text-align: center; 
+            border: none; 
+            transition: background 0.3s ease; 
+        }
+        .favorite-btn:hover, .remove-favorite-btn:hover { 
+            background: #2d1a05; 
+        }
+        .favorite-description { 
+            color: #666; 
+            font-size: 1rem; 
+            margin-bottom: 1.5rem; 
+            text-align: center; 
+            padding: 0 1rem; 
+        }
+        /* Navigation bar styles */
+        .nav-container {
+            background: #8B6B4E;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+        .logo i {
+            font-size: 1.8rem;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+            opacity: 0.9;
+        }
+        .nav-link:hover {
+            opacity: 1;
+        }
+        .nav-link.active {
+            opacity: 1;
+            font-weight: 600;
+        }
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .profile-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            text-decoration: none;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+        .profile-button:hover {
+            opacity: 1;
+        }
+        .logout-button {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .logout-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        /* Yeni favori butonu stilleri */
+        .favorite-icon-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .favorite-icon-btn i {
+            color: #8B6B4E;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        .favorite-icon-btn:hover {
+            transform: scale(1.1);
+            background: white;
+        }
+        .favorite-icon-btn:hover i {
+            color: #e74c3c;
+            transform: scale(1.1);
+        }
+        .favorite-icon-btn .tooltip {
+            position: absolute;
+            top: -30px;
+            right: 50%;
+            transform: translateX(50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .favorite-icon-btn:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+        .favorite-icon-btn .tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 5px 5px 0;
+            border-style: solid;
+            border-color: rgba(0, 0, 0, 0.8) transparent transparent;
+        }
+
+        /* Modal stilleri */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .close {
+            position: absolute;
+            right: 1.5rem;
+            top: 1rem;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #666;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: var(--accent-color);
+            outline: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #2b1502;
+        }
+
+        .form-footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            color: #666;
+        }
+
+        .form-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .modal-open {
+            overflow: hidden;
+        }
+
+        .hidden { display: none !important; }
+
+        /* Login Modal Tabs & Buttons */
+        .login-tabs {
+            display: flex;
+            margin: 2rem auto;
+            border-bottom: 2px solid #eee;
+            max-width: 400px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            background: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .tab-btn.active {
+            color: var(--accent-color);
+        }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Üst çubuk -->
+    <nav class="nav-container">
+        <div class="nav-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-coffee"></i>
+                CoffeeLab
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Anasayfa</a>
+                <a href="recipes.html" class="nav-link">Tarifler</a>
+                <a href="favorites.html" class="nav-link active">Favoriler</a>
+            </div>
+            <div class="nav-right">
+                <a href="#" class="profile-button" onclick="openProfileModal(); return false;">
+                    <i class="fas fa-user"></i>
+                    Profilim
+                </a>
+                <a href="#" class="logout-button" onclick="handleLogout(); return false;">Çıkış Yap</a>
+            </div>
+        </div>
+    </nav>
+    <div id="favoritesContainer" class="favorites-container">
+        <h2 class="favorites-title">Favori Tariflerim</h2>
+        <div id="favoritesGrid" class="favorites-grid"></div>
+        <div id="noFavorites" class="no-favorites">Favori tarifiniz yok.</div>
+        <div id="notLoggedIn" class="not-logged-in">
+            Favorileri görüntülemek için lütfen giriş yapın.
+            <button onclick="openLoginModal()" class="login-btn">Giriş Yap</button>
+        </div>
+    </div>
+
+    <!-- Profil Modalı -->
+    <div id="profileModal" class="profile-modal">
+        <div class="profile-modal-content">
+            <span class="close-modal" onclick="closeProfileModal()">&times;</span>
+            <h2>Profil Bilgilerim</h2>
+            <div class="form-group">
+                <label for="profileName">Ad Soyad</label>
+                <input type="text" id="profileName" readonly title="Kullanıcının adı ve soyadı">
+            </div>
+            <div class="form-group">
+                <label for="profileEmail">E-posta</label>
+                <input type="email" id="profileEmail" readonly title="Kullanıcının e-posta adresi">
+            </div>
+            <hr>
+            <h3>Şifre Değiştir</h3>
+            <form id="changePasswordForm" onsubmit="handlePasswordChange(event)">
+                <div class="form-group">
+                    <label for="currentPassword">Mevcut Şifre</label>
+                    <input type="password" id="currentPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="newProfilePassword">Yeni Şifre</label>
+                    <input type="password" id="newProfilePassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmProfilePassword">Yeni Şifre Tekrar</label>
+                    <input type="password" id="confirmProfilePassword" required>
+                </div>
+                <button type="submit" class="submit-btn">Şifreyi Güncelle</button>
+            </form>
+            <div id="passwordChangeMessage" class="message"></div>
+        </div>
+    </div>
+
+    <script>
+    // Tarif bilgileri (kısa açıklama ve görsel için)
+    const recipeData = {
+        'filtre-kahve.html': {name:'Filtre Kahve', image:'images/recipes/filtre-kahve.jpg.png', description:'Taze çekilmiş kahve çekirdekleri ile hazırlanan, aromatik ve dengeli bir filtre kahve deneyimi'},
+        'latte.html': {name:'Latte', image:'images/recipes/latte.jpg', description:'Kadifemsi süt köpüğü ve yoğun espresso ile hazırlanan, dengeli ve kremamsı bir latte deneyimi'},
+        'cappuccino.html': {name:'Cappuccino', image:'images/recipes/cappuccino.jpg', description:'Espresso, buharla ısıtılmış süt ve süt köpüğünün mükemmel dengesi'},
+        'mocha.html': {name:'Mocha', image:'images/recipes/mocha.jpg', description:'Espresso, sıcak süt ve çikolatanın lezzetli buluşması'},
+        'americano.html': {name:'Americano', image:'images/recipes/americano.jpg', description:'Espresso ve sıcak su ile hazırlanan, temiz ve net bir kahve deneyimi'},
+        'espresso.html': {name:'Espresso', image:'images/recipes/espresso.jpg', description:'Yüksek basınçla hazırlanan, yoğun ve aromalı kahve deneyimi'},
+        'ristretto.html': {name:'Ristretto', image:'images/recipes/ristretto.jpg', description:"Espresso'nun daha yoğun ve aromalı versiyonu"},
+        'flat-white.html': {name:'Flat White', image:'images/recipes/flat-white.jpg', description:'İnce süt köpüğü ve çift shot espresso ile hazırlanan yoğun içim'},
+        'cold-brew.html': {name:'Cold Brew', image:'images/recipes/cold-brew.jpg', description:'12 saat soğuk demleme ile hazırlanan, yumuşak içimli kahve'},
+        'iced-latte.html': {name:'Iced Latte', image:'images/recipes/iced-latte.jpg', description:'Soğuk süt ve espresso ile hazırlanan ferahlatıcı içecek'},
+        'frappuccino.html': {name:'Frappuccino', image:'images/recipes/frappuccino.jpg', description:'Buzlu, kremsi ve tatlı bir kahve deneyimi'},
+        'vanilla-latte.html': {name:'Vanilyalı Latte', image:'images/recipes/vanilyali-latte.jpg', description:'Vanilya şurubu ile tatlandırılmış, kremamsı latte'},
+        'caramel-macchiato.html': {name:'Karamel Macchiato', image:'images/recipes/caramel-macchiato.jpg', description:'Karamel soslu, süt köpüklü espresso keyfi'},
+        'findikli-mocha.html': {name:'Fındıklı Mocha', image:'images/recipes/findikli-mocha.jpg', description:'Espresso, sıcak çikolata, süt ve fındık şurubunun muhteşem uyumu'},
+        'turkish-coffee.html': {name:'Türk Kahvesi', image:'images/recipes/turkish-coffee.jpg', description:'İnce öğütülmüş kahve çekirdeklerinin cezve içinde su ile kaynatılmasıyla hazırlanan, köpüklü ve aromatik bir içecek.'},
+        'dibek-coffee.html': {name:'Dibek Kahvesi', image:'images/recipes/dibek-coffee.jpg', description:'Kahve çekirdeklerinin dibek adı verilen taş havanlarda dövülerek hazırlanan, geleneksel bir Türk kahvesi çeşidi.'},
+        'menengic-coffee.html': {name:'Menengiç Kahvesi', image:'images/recipes/menengic.jpg', description:'Menengiç ağacının meyvelerinden elde edilen, kafeinsiz ve doğal bir içecek.'},
+        'affogato.html': {name:'Affogato', image:'images/recipes/affogato.jpg', description:'Sıcak espresso ve soğuk dondurmanın muhteşem uyumuyla hazırlanan bir tatlı.'}
+    };
+    function renderFavorites() {
+        const user = localStorage.getItem('user');
+        const favoritesGrid = document.getElementById('favoritesGrid');
+        const noFavorites = document.getElementById('noFavorites');
+        const notLoggedIn = document.getElementById('notLoggedIn');
+        favoritesGrid.innerHTML = '';
+        if (!user) {
+            notLoggedIn.style.display = 'block';
+            noFavorites.style.display = 'none';
+            return;
+        }
+        notLoggedIn.style.display = 'none';
+        const email = JSON.parse(user).email;
+        let favorites = JSON.parse(localStorage.getItem('favorites') || '{}');
+        const favList = (favorites[email] || []);
+        if (favList.length === 0) {
+            noFavorites.style.display = 'block';
+            return;
+        }
+        noFavorites.style.display = 'none';
+        favList.forEach(file => {
+            const data = recipeData[file];
+            if (!data) return;
+            const card = document.createElement('div');
+            card.className = 'favorite-card';
+            
+            // Favori butonu
+            const favoriteBtn = document.createElement('button');
+            favoriteBtn.className = 'favorite-icon-btn';
+            favoriteBtn.innerHTML = '<i class="fas fa-heart"></i><span class="tooltip">Favorilerden Çıkar</span>';
+            favoriteBtn.onclick = function() { removeFromFavorites(file); return false; };
+            card.appendChild(favoriteBtn);
+            
+            const img = document.createElement('img');
+            img.src = data.image;
+            img.alt = data.name;
+            img.className = 'favorite-image';
+            card.appendChild(img);
+            
+            const title = document.createElement('div');
+            title.className = 'favorite-title';
+            title.textContent = data.name;
+            card.appendChild(title);
+            
+            const desc = document.createElement('div');
+            desc.className = 'favorite-description';
+            desc.textContent = data.description;
+            card.appendChild(desc);
+            
+            const detailsBtn = document.createElement('a');
+            detailsBtn.href = file;
+            detailsBtn.className = 'favorite-btn';
+            detailsBtn.textContent = 'Tarifi Gör';
+            card.appendChild(detailsBtn);
+            
+            favoritesGrid.appendChild(card);
+        });
+    }
+    function removeFromFavorites(recipeFile) {
+        const user = localStorage.getItem('user');
+        if (!user) {
+            if (document.getElementById('loginModal')) {
+                document.getElementById('loginModal').style.display = 'block';
+                document.body.classList.add('modal-open');
+            }
+            return;
+        }
+        let favorites = JSON.parse(localStorage.getItem('favorites') || '{}');
+        const email = JSON.parse(user).email;
+        if (!favorites[email]) return;
+        favorites[email] = favorites[email].filter(f => f !== recipeFile);
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+        renderFavorites();
+    }
+    function openProfileModal() {
+        const profileModal = document.getElementById('profileModal');
+        const savedUser = JSON.parse(localStorage.getItem('user'));
+        if (savedUser) {
+            document.getElementById('profileName').value = savedUser.name;
+            document.getElementById('profileEmail').value = savedUser.email;
+        }
+        profileModal.style.display = 'flex';
+        document.body.classList.add('modal-open');
+    }
+    function closeProfileModal() {
+        document.getElementById('profileModal').style.display = 'none';
+        document.body.classList.remove('modal-open');
+    }
+    function handleLogout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = 'index.html';
+    }
+    function updateNavbarAuthUI() {
+        const user = localStorage.getItem('user');
+        const profileBtn = document.querySelector('.profile-button');
+        const logoutBtn = document.querySelector('.logout-button');
+        const loginBtn = document.querySelector('.login-btn');
+        if (user) {
+            if (profileBtn) profileBtn.style.display = 'flex';
+            if (logoutBtn) logoutBtn.style.display = 'flex';
+            if (loginBtn) loginBtn.style.display = 'none';
+        } else {
+            if (profileBtn) profileBtn.style.display = 'none';
+            if (logoutBtn) logoutBtn.style.display = 'none';
+            if (loginBtn) loginBtn.style.display = 'flex';
+        }
+    }
+    window.addEventListener('DOMContentLoaded', updateNavbarAuthUI);
+    window.onload = renderFavorites;
+    </script>
+</body>
+</html> 

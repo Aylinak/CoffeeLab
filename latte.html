@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoffeeLab - Latte Tarifi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background: #f5f3f0;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .main-content {
+            margin-top: 90px;
+        }
+        .recipe-page {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 2rem;
+        }
+        .recipe-header {
+            width: 100%;
+            margin-bottom: 2rem;
+        }
+        .recipe-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            object-position: center;
+            border-radius: 15px;
+            display: block;
+        }
+        .recipe-content {
+            padding: 0 1rem;
+        }
+        .recipe-title {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        .recipe-description {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        .recipe-meta {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #f8f8f8;
+            border-radius: 10px;
+        }
+        .recipe-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+        }
+        .recipe-meta i {
+            color: var(--accent-color);
+        }
+        .recipe-section {
+            margin-bottom: 3rem;
+        }
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent-color);
+        }
+        .ingredients-list, .steps-list, .tips-list {
+            list-style: none;
+            padding: 0;
+        }
+        .ingredients-list li, .steps-list li, .tips-list li {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: #f8f8f8;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .steps-list li {
+            display: flex;
+            gap: 1rem;
+        }
+        .step-number {
+            background: var(--accent-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .tips-list li i {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+        }
+        .equipment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .equipment-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8f8f8;
+            border-radius: 10px;
+        }
+        .equipment-item i {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+        }
+        .equipment-item span {
+            font-weight: 500;
+        }
+        .back-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            margin-top: 2rem;
+            transition: all 0.3s ease;
+        }
+        .back-button:hover {
+            background: #2b1502;
+            transform: translateY(-3px);
+        }
+        .instruction-step {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f8f8f8;
+            border-radius: 10px;
+        }
+        .instruction-step h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        .instruction-step p {
+            color: #666;
+            line-height: 1.6;
+        }
+        .recipe-video {
+            width: 100%;
+            max-width: 1000px;
+            margin: 2rem auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .recipe-video video {
+            width: 100%;
+            display: block;
+        }
+        /* Üst çubuk stilleri */
+        .nav-container {
+            background: #8B6B4E;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+        .logo i {
+            font-size: 1.8rem;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+            opacity: 0.9;
+        }
+        .nav-link:hover {
+            opacity: 1;
+        }
+        .nav-link.active {
+            opacity: 1;
+            font-weight: 600;
+        }
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .profile-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            text-decoration: none;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+        .profile-button:hover {
+            opacity: 1;
+        }
+        .logout-button {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .logout-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .video-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f8f8f8;
+            border-radius: 15px;
+        }
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 oran */
+            height: 0;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-container">
+        <div class="nav-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-coffee"></i>
+                CoffeeLab
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Anasayfa</a>
+                <a href="recipes.html" class="nav-link">Tarifler</a>
+                <a href="favorites.html" class="nav-link">Favoriler</a>
+            </div>
+            <div class="nav-right">
+                <a href="profile.html" class="profile-button">
+                    <i class="fas fa-user"></i>
+                    Profilim
+                </a>
+                <a href="#" class="logout-button" onclick="handleLogout(); return false;">Çıkış Yap</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="main-content">
+        <div class="recipe-page">
+            <div class="recipe-header">
+                <img src="images/recipes/latte.jpg" alt="Latte" class="recipe-image">
+            </div>
+            <div class="recipe-content">
+                <h1 class="recipe-title">Latte</h1>
+                <p class="recipe-description">Kadifemsi süt köpüğü ve yoğun espresso ile hazırlanan, dengeli ve kremamsı bir latte deneyimi.</p>
+                
+                <div class="recipe-meta">
+                    <span><i class="fas fa-clock"></i> Hazırlama Süresi: 5 dk</span>
+                    <span><i class="fas fa-fire"></i> Zorluk: Orta</span>
+                    <span><i class="fas fa-coffee"></i> Porsiyon: 1</span>
+                </div>
+
+                <div class="recipe-section">
+                    <h2 class="section-title">Malzemeler</h2>
+                    <ul class="ingredients-list">
+                        <li>18-20g Espresso çekirdeği</li>
+                        <li>200ml Taze süt</li>
+                        <li>İsteğe bağlı şeker</li>
+                    </ul>
+                </div>
+
+                <div class="recipe-section">
+                    <h2 class="section-title">Gerekli Ekipmanlar</h2>
+                    <div class="equipment-list">
+                        <div class="equipment-item">
+                            <i class="fas fa-coffee"></i>
+                            <span>Espresso makinesi / Chemex - Filtre kağıdı</span>
+                        </div>
+                        <div class="equipment-item">
+                            <i class="fas fa-mug-hot"></i>
+                            <span>Latte bardağı (300ml)</span>
+                        </div>
+                        <div class="equipment-item">
+                            <i class="fas fa-temperature-high"></i>
+                            <span>Süt termometresi</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recipe-section">
+                    <h2 class="section-title">Hazırlanışı</h2>
+                    <div style="display: flex; flex-wrap: wrap; gap: 2rem;">
+                        <div style="flex:1; min-width: 320px; background: #f8f8f8; border-radius: 15px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                            <h3 style="margin-top:0; color:var(--accent-color); font-size:1.15rem; margin-bottom:1.2rem;">Chemex ile Latte</h3>
+                            <ol style="padding-left:1.2rem;">
+                                <li style="margin-bottom:1rem;"><b>Hazırlık & Filtreyi Islatma:</b><br>Chemex'i ve filtresini hazırlayın, filtreyi sıcak suyla ıslatıp suyu dökün.</li>
+                                <li style="margin-bottom:1rem;"><b>Kahveyi Ekle & Blooming:</b><br>Orta kalınlıkta öğütülmüş kahveyi ekleyin. Az miktarda sıcak su dökerek kahveyi 'uyandırın'.</li>
+                                <li style="margin-bottom:1rem;"><b>Süt Isıtma & Köpürtme:</b><br>Sütü ısıtın ve köpürtün. Köpüğün yoğun olmasına dikkat edin.</li>
+                                <li style="margin-bottom:1rem;"><b>Demleme & Bekleme:</b><br>Kalan suyu dairesel hareketlerle yavaşça dökün. Kahvenin süzülmesini bekleyin.</li>
+                                <li style="margin-bottom:1rem;"><b>Latte Yapma:</b><br>Chemex kahvenizi fincana dökün, ardından köpürtülmüş sütü ekleyin.</li>
+                                <li><b>Süsleme ve Sunum:</b><br>Lattenizin üstünü istediğiniz gibi süsleyin. Afiyet olsun!</li>
+                            </ol>
+                        </div>
+                        <div style="flex:1; min-width: 320px; background: #f8f8f8; border-radius: 15px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                            <h3 style="color:var(--accent-color); font-size:1.15rem; margin-bottom:1.2rem;">Espresso Makinesi ile Latte</h3>
+                            <ol style="padding-left:1.2rem;">
+                                <li style="margin-bottom:1rem;"><b>Espresso Hazırlayın:</b><br>Espresso makinesinde 18-20g ince çekilmiş kahveyi portafiltreye yerleştirin ve sıkıştırın.<br>25-30 saniyede yaklaşık 30 ml espresso elde edin.</li>
+                                <li style="margin-bottom:1rem;"><b>Sütü Isıtın ve Köpürtün:</b><br>150-200 ml sütü buhar çubuğu ile 65°C'ye kadar ısıtın ve köpürtün.<br>Süt hacmi yaklaşık iki katına çıkmalı, köpük yoğun ve kremsi olmalı.</li>
+                                <li style="margin-bottom:1rem;"><b>Bardağa Dökün:</b><br>Önce espressoyu bardağa dökün.<br>Üzerine sıcak sütü ekleyin.<br>En üste ise ince bir süt köpüğü tabakası ekleyin.</li>
+                                <li><b>Süsleme ve Sunum:</b><br>Dilerseniz üzerine tarçın, kakao veya vanilya serpebilirsiniz.<br>Afiyet olsun!</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recipe-section">
+                    <h2 class="section-title">Püf Noktaları</h2>
+                    <div class="tips-container">
+                        <ul class="tips-list">
+                            <li><i class="fas fa-lightbulb"></i> Sütü çok fazla köpürtmemeye dikkat edin, latte için ince ve kadifemsi bir köpük idealdir.</li>
+                            <li><i class="fas fa-lightbulb"></i> Espresso ve süt oranını 1:3 olarak ayarlayın.</li>
+                            <li><i class="fas fa-lightbulb"></i> Sütü ısıtırken termometre kullanarak sıcaklığı kontrol edin.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="recipe-section">
+                    <h2 class="section-title">Video Tarifi</h2>
+                    <div class="video-section">
+                        <div class="video-container">
+                            <video controls>
+                                <source src="videos/latte_tarif_videosu.mp4" type="video/mp4">
+                                Tarayıcınız video oynatmayı desteklemiyor.
+                            </video>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="recipes.html" class="back-button">Tariflere Dön</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleLogout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html> 

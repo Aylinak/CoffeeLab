@@ -1,0 +1,1930 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoffeeLab - Tarifler</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f5f5;
+            color: var(--text-color);
+            overflow-y: auto; /* Sayfanın dikey olarak kaydırılabilir olmasını sağlar */
+            overflow-x: hidden; /* Yatay kaydırmayı engeller */
+        }
+
+        .recipe-section {
+            padding: 5rem 1%;
+            background: #f5f5f5;
+            display: flex;
+            gap: 2rem;
+            min-height: 100vh;
+            margin-top: 80px;
+        }
+
+        .recipe-container {
+            flex: 1;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .all-recipes {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .recipe-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            height: 450px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .category-title {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--accent-color);
+            text-align: center;
+        }
+
+        .all-recipes-title {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 3rem;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .categories-sidebar {
+            width: 250px;
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .categories-sidebar h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .category-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .category-item {
+            margin-bottom: 1rem;
+        }
+
+        .category-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem;
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .category-link:hover {
+            background: #f8f8f8;
+            color: var(--accent-color);
+        }
+
+        .category-link.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .category-link i {
+            font-size: 1.2rem;
+        }
+
+        .recipe-header {
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 0;
+        }
+
+        .recipe-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .recipe-content {
+            padding: 0.8rem 1rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            background: white;
+        }
+
+        .recipe-title {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            margin-bottom: 0.2rem;
+            line-height: 1.2;
+            font-weight: 600;
+        }
+
+        .recipe-description {
+            color: #666;
+            font-size: 0.8rem;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 0.8rem;
+        }
+
+        .recipe-details {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .recipe-title {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .recipe-meta {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: #f8f8f8;
+            border-radius: 10px;
+        }
+
+        .recipe-meta span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+        }
+
+        .recipe-meta i {
+            color: var(--accent-color);
+        }
+
+        .recipe-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #f8f8f8;
+            border-radius: 10px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--accent-color);
+        }
+
+        .ingredients-list, .steps-list {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+        .ingredients-list li, .steps-list li {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem;
+            margin-bottom: 0.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .step-number {
+            background: var(--accent-color);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .tips-container {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+        .tips-list li {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem;
+            margin-bottom: 0.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .tips-list i {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            margin-top: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #2b1502;
+            transform: translateY(-3px);
+        }
+
+        .category-section {
+            display: none; /* Tüm kategori bölümlerini varsayılan olarak gizle */
+        }
+
+        .category-section.active {
+            display: block; /* Aktif kategoriyi göster */
+        }
+
+        #all {
+            display: block; /* Tüm tarifler bölümünü varsayılan olarak göster */
+        }
+
+        .recipe-link {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .recipe-link:hover {
+            background: #2b1502;
+            transform: translateY(-3px);
+        }
+
+        .all-recipes .recipe-card {
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .all-recipes .recipe-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .recipe-accordion {
+            margin-top: 2rem;
+        }
+
+        .accordion-item {
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .accordion-button {
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .accordion-button:hover {
+            background: #2b1502;
+        }
+
+        .accordion-button i {
+            font-size: 1.2rem;
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background: white;
+        }
+
+        .accordion-content.active {
+            max-height: 500px;
+            padding: 1rem;
+        }
+
+        .accordion-content ul, .accordion-content ol {
+            padding-left: 1.5rem;
+            margin: 0;
+        }
+
+        .accordion-content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        /* Kategori içindeki tarifleri grid yapısında göster */
+        .category-section .recipe-card {
+            display: inline-block;
+            margin: 1rem;
+            vertical-align: top;
+        }
+
+        .category-section {
+            text-align: center; /* Kartları ortala */
+        }
+
+        .category-section .all-recipes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* Üst çubuk stilleri */
+        .nav-container {
+            background: #8B6B4E;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+            opacity: 0.9;
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+        }
+
+        .nav-link.active {
+            opacity: 1;
+            font-weight: 600;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .profile-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            text-decoration: none;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+
+        .profile-button:hover {
+            opacity: 1;
+        }
+
+        .logout-button {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Ana içeriği navigasyon çubuğunun altına kaydır */
+        .recipe-section {
+            margin-top: 80px;
+        }
+
+        .recommendations-section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: #f8f8f8;
+            border-radius: 15px;
+        }
+
+        .recommendations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .recipe-card.recommended {
+            border: 2px solid var(--accent-color);
+            transform: scale(1.02);
+            transition: transform 0.3s ease;
+        }
+
+        .recipe-card.recommended:hover {
+            transform: scale(1.05);
+        }
+
+        .view-recipe-btn {
+            display: block;
+            padding: 0.6rem 1rem;
+            background: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-align: center;
+            width: 100%;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-top: auto;
+        }
+
+        .view-recipe-btn:hover {
+            background: #4a2504;
+            transform: translateY(-2px);
+        }
+
+        .recipe-info {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.3rem 0;
+            border-bottom: 1px solid #eee;
+            color: #666;
+            font-size: 0.75rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .recipe-info span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .recipe-info i {
+            color: var(--accent-color);
+        }
+
+        /* Profil Modalı */
+        .profile-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0; top: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.35);
+            -webkit-backdrop-filter: blur(2px);
+            backdrop-filter: blur(2px);
+            justify-content: center;
+            align-items: center;
+        }
+        .profile-modal.active {
+            display: flex;
+        }
+        .profile-modal-content {
+            background: #fff;
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+            min-width: 360px;
+            max-width: 480px;
+            width: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            margin: 0 auto;
+            height: auto;
+            max-height: none;
+            overflow: visible;
+        }
+        .profile-modal-content input, .profile-modal-content button {
+            padding: 0.6rem;
+            font-size: 0.97rem;
+            width: 100%;
+            border-radius: 6px;
+            border: 1px solid #eee;
+            margin-bottom: 0.5rem;
+        }
+        .profile-modal-content button {
+            background: #3a220e;
+            color: #fff;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+        .profile-modal-content h2, .profile-modal-content h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        .form-group label {
+            font-size: 0.97rem;
+        }
+        .close-modal {
+            position: absolute;
+            right: 1.2rem;
+            top: 1.2rem;
+            font-size: 2rem;
+            color: #8B6B4E;
+            cursor: pointer;
+        }
+        .favorite-icon-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 2;
+        }
+        .favorite-icon-btn i {
+            color: #8B6B4E;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        .favorite-icon-btn:hover {
+            transform: scale(1.1);
+            background: white;
+        }
+        .favorite-icon-btn:hover i {
+            color: #e74c3c;
+            transform: scale(1.1);
+        }
+        .favorite-icon-btn .tooltip {
+            position: absolute;
+            top: -48px;
+            right: 50%;
+            transform: translateX(50%);
+            background: rgba(0, 0, 0, 0.95);
+            color: white;
+            padding: 0.7rem 1.2rem;
+            border-radius: 6px;
+            font-size: 1.05rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            z-index: 9999;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+        }
+        .favorite-icon-btn:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+        .favorite-icon-btn .tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: -7px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 7px 7px 0;
+            border-style: solid;
+            border-color: rgba(0, 0, 0, 0.95) transparent transparent;
+        }
+        .recipe-card, .recipe-header { overflow: visible !important; }
+    </style>
+</head>
+<body>
+    <!-- Üst çubuk -->
+    <nav class="nav-container">
+        <div class="nav-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-coffee"></i>
+                CoffeeLab
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Anasayfa</a>
+                <a href="recipes.html" class="nav-link active">Tarifler</a>
+                <a href="favorites.html" class="nav-link">Favoriler</a>
+            </div>
+            <div class="nav-right">
+                <a href="#" class="profile-button" onclick="openProfileModal(); return false;">
+                    <i class="fas fa-user"></i>
+                    Profilim
+                </a>
+                <a href="#" class="logout-button" onclick="handleLogout(); return false;">Çıkış Yap</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="recipe-section">
+        <div class="categories-sidebar">
+            <h3>Kategoriler</h3>
+            <ul class="category-list">
+                <li class="category-item">
+                    <a href="#haftanin-kahvesi" class="category-link">
+                        <i class="fas fa-star"></i>
+                        Haftanın Kahvesi
+                    </a>
+                </li>
+                <li class="category-item">
+                    <a href="#all" class="category-link active">
+                        <i class="fas fa-list"></i>
+                        Tüm Tarifler
+                    </a>
+                </li>
+                <li class="category-item">
+                    <a href="#sutlu" class="category-link">
+                        <i class="fas fa-mug-hot"></i>
+                        Sütlü Kahveler
+                    </a>
+                </li>
+                <li class="category-item">
+                    <a href="#sade" class="category-link">
+                        <i class="fas fa-coffee"></i>
+                        Sade Kahveler
+                    </a>
+                </li>
+                <li class="category-item">
+                    <a href="#soguk" class="category-link">
+                        <i class="fas fa-snowflake"></i>
+                        Soğuk Kahveler
+                    </a>
+                </li>
+                <li class="category-item">
+                    <a href="#aromali" class="category-link">
+                        <i class="fas fa-wind"></i>
+                        Aromalı Kahveler
+                    </a>
+                </li>
+                <li class="category-item">
+                    <a href="#geleneksel" class="category-link">
+                        <i class="fas fa-history"></i>
+                        Geleneksel Kahveler
+                    </a>
+                </li>
+                    
+            </ul>
+        </div>
+
+        <div class="recipe-container">
+            <div id="haftanin-kahvesi" class="category-section">
+                <div id="featured-coffee-container"></div>
+            </div>
+            <!-- Tüm Tarifler -->
+            <div id="all" class="category-section">
+                <h2 class="all-recipes-title">Tüm Tarifler</h2>
+                <div class="all-recipes">
+                    <!-- Filtre Kahve -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/filtre-kahve.jpg.png" alt="Filtre Kahve" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Filtre Kahve</h2>
+                            <p class="recipe-description">Taze çekilmiş kahve çekirdekleri ile hazırlanan, aromatik ve dengeli bir filtre kahve deneyimi</p>
+                            <a href="filtre-kahve.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="filtre-kahve.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Latte -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/latte.jpg" alt="Latte" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Latte</h2>
+                            <p class="recipe-description">Kadifemsi süt köpüğü ve yoğun espresso ile hazırlanan, dengeli ve kremamsı bir latte deneyimi</p>
+                            <a href="latte.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="latte.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Cappuccino -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/cappuccino.jpg" alt="Cappuccino" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Cappuccino</h2>
+                            <p class="recipe-description">Espresso, buharla ısıtılmış süt ve süt köpüğünün mükemmel dengesi</p>
+                            <a href="cappuccino.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="cappuccino.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Mocha -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/mocha.jpg" alt="Mocha" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Mocha</h2>
+                            <p class="recipe-description">Espresso, sıcak süt ve çikolatanın lezzetli buluşması</p>
+                            <a href="mocha.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="mocha.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Americano -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/americano.jpg" alt="Americano" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Americano</h2>
+                            <p class="recipe-description">Espresso ve sıcak su ile hazırlanan, temiz ve net bir kahve deneyimi</p>
+                            <a href="americano.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="americano.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Espresso -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/espresso.jpg" alt="Espresso" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Espresso</h2>
+                            <p class="recipe-description">Yüksek basınçla hazırlanan, yoğun ve aromalı kahve deneyimi</p>
+                            <a href="espresso.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="espresso.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Ristretto -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/ristretto.jpg" alt="Ristretto" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Ristretto</h2>
+                            <p class="recipe-description">Espresso'nun daha yoğun ve aromalı versiyonu</p>
+                            <a href="ristretto.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="ristretto.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Flat White -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/flat-white.jpg" alt="Flat White" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Flat White</h2>
+                            <p class="recipe-description">İnce süt köpüğü ve çift shot espresso ile hazırlanan yoğun içim</p>
+                            <a href="flat-white.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="flat-white.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Cold Brew -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/cold-brew.jpg" alt="Cold Brew" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Cold Brew</h2>
+                            <p class="recipe-description">12 saat soğuk demleme ile hazırlanan, yumuşak içimli kahve</p>
+                            <a href="cold-brew.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="cold-brew.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Iced Latte -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/iced-latte.jpg" alt="Iced Latte" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Iced Latte</h2>
+                            <p class="recipe-description">Soğuk süt ve espresso ile hazırlanan ferahlatıcı içecek</p>
+                            <a href="iced-latte.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="iced-latte.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Frappuccino -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/frappuccino.jpg" alt="Frappuccino" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Frappuccino</h2>
+                            <p class="recipe-description">Buzlu, kremsi ve tatlı bir kahve deneyimi</p>
+                            <a href="frappuccino.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="frappuccino.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Vanilyalı Latte -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/vanilyali-latte.jpg" alt="Vanilyalı Latte" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Vanilyalı Latte</h2>
+                            <p class="recipe-description">Vanilya şurubu ile tatlandırılmış, kremamsı latte</p>
+                            <a href="vanilla-latte.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="vanilla-latte.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Karamelli Macchiato -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/caramel-macchiato.jpg" alt="Karamel Macchiato" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Karamel Macchiato</h2>
+                            <p class="recipe-description">Karamel soslu, süt köpüklü espresso keyfi</p>
+                            <a href="caramel-macchiato.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="caramel-macchiato.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Fındıklı Mocha -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/findikli-mocha.jpg" alt="Fındıklı Mocha" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Fındıklı Mocha</h2>
+                            <p class="recipe-description">Espresso, sıcak çikolata, süt ve fındık şurubunun muhteşem uyumuyla hazırlanan, zengin ve aromatik bir içecek.</p>
+                            <a href="findikli-mocha.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="findikli-mocha.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Türk Kahvesi -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/turkish-coffee.jpg" alt="Türk Kahvesi" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Türk Kahvesi</h2>
+                            <p class="recipe-description">İnce öğütülmüş kahve çekirdeklerinin cezve içinde su ile kaynatılmasıyla hazırlanan, köpüklü ve aromatik bir içecek.</p>
+                            <a href="turkish-coffee.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="turkish-coffee.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Dibek Kahvesi -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/dibek-coffee.jpg" alt="Dibek Kahvesi" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Dibek Kahvesi</h2>
+                            <p class="recipe-description">Kahve çekirdeklerinin dibek adı verilen taş havanlarda dövülerek hazırlanan, geleneksel bir Türk kahvesi çeşidi.</p>
+                            <a href="dibek-coffee.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="dibek-coffee.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Menengiç Kahvesi -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/menengic.jpg" alt="Menengiç Kahvesi" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Menengiç Kahvesi</h2>
+                            <p class="recipe-description">Menengiç ağacının meyvelerinden elde edilen, kafeinsiz ve doğal bir içecek.</p>
+                            <a href="menengic-coffee.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="menengic-coffee.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Affogato -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/affogato.jpg" alt="Affogato" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Affogato</h2>
+                            <p class="recipe-description">Sıcak espresso ve soğuk dondurmanın muhteşem uyumuyla hazırlanan bir tatlı.</p>
+                            <a href="affogato.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="affogato.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sütlü Kahveler -->
+            <div id="sutlu" class="category-section">
+                <h2 class="category-title">Sütlü Kahveler</h2>
+                <div class="all-recipes">
+                    <!-- Latte -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/latte.jpg" alt="Latte" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Latte</h2>
+                            <p class="recipe-description">Kadifemsi süt köpüğü ve yoğun espresso ile hazırlanan, dengeli ve kremamsı bir latte deneyimi</p>
+                            <a href="latte.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="latte.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Cappuccino -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/cappuccino.jpg" alt="Cappuccino" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Cappuccino</h2>
+                            <p class="recipe-description">Espresso, buharla ısıtılmış süt ve süt köpüğünün mükemmel dengesi</p>
+                            <a href="cappuccino.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="cappuccino.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Mocha -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/mocha.jpg" alt="Mocha" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Mocha</h2>
+                            <p class="recipe-description">Espresso, sıcak süt ve çikolatanın lezzetli buluşması</p>
+                            <a href="mocha.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="mocha.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Flat White -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/flat-white.jpg" alt="Flat White" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Flat White</h2>
+                            <p class="recipe-description">İnce süt köpüğü ve çift shot espresso ile hazırlanan yoğun içim</p>
+                            <a href="flat-white.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="flat-white.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sade Kahveler -->
+            <div id="sade" class="category-section">
+                <h2 class="category-title">Sade Kahveler</h2>
+                <div class="all-recipes">
+                    <!-- Filtre Kahve -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/filtre-kahve.jpg.png" alt="Filtre Kahve" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Filtre Kahve</h2>
+                            <p class="recipe-description">Taze çekilmiş kahve çekirdekleri ile hazırlanan, aromatik ve dengeli bir filtre kahve deneyimi</p>
+                            <a href="filtre-kahve.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="filtre-kahve.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Americano -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/americano.jpg" alt="Americano" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Americano</h2>
+                            <p class="recipe-description">Espresso ve sıcak su ile hazırlanan, temiz ve net bir kahve deneyimi</p>
+                            <a href="americano.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="americano.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Espresso -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/espresso.jpg" alt="Espresso" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Espresso</h2>
+                            <p class="recipe-description">Yüksek basınçla hazırlanan, yoğun ve aromalı kahve deneyimi</p>
+                            <a href="espresso.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="espresso.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Ristretto -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/ristretto.jpg" alt="Ristretto" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Ristretto</h2>
+                            <p class="recipe-description">Espresso'nun daha yoğun ve aromalı versiyonu</p>
+                            <a href="ristretto.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="ristretto.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Soğuk Kahveler -->
+            <div id="soguk" class="category-section">
+                <h2 class="category-title">Soğuk Kahveler</h2>
+                <div class="all-recipes">
+                    <!-- Cold Brew -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/cold-brew.jpg" alt="Cold Brew" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Cold Brew</h2>
+                            <p class="recipe-description">12 saat soğuk demleme ile hazırlanan, yumuşak içimli kahve</p>
+                            <a href="cold-brew.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="cold-brew.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Iced Latte -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/iced-latte.jpg" alt="Iced Latte" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Iced Latte</h2>
+                            <p class="recipe-description">Soğuk süt ve espresso ile hazırlanan ferahlatıcı içecek</p>
+                            <a href="iced-latte.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="iced-latte.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Frappuccino -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/frappuccino.jpg" alt="Frappuccino" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Frappuccino</h2>
+                            <p class="recipe-description">Buzlu, kremsi ve tatlı bir kahve deneyimi</p>
+                            <a href="frappuccino.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="frappuccino.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Affogato -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/affogato.jpg" alt="Affogato" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Affogato</h2>
+                            <p class="recipe-description">Sıcak espresso ve soğuk dondurmanın muhteşem uyumuyla hazırlanan bir tatlı.</p>
+                            <a href="affogato.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="affogato.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aromalı Kahveler -->
+            <div id="aromali" class="category-section">
+                <h2 class="category-title">Aromalı Kahveler</h2>
+                <div class="all-recipes">
+                    <!-- Vanilyalı Latte -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/vanilyali-latte.jpg" alt="Vanilyalı Latte" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Vanilyalı Latte</h2>
+                            <p class="recipe-description">Vanilya şurubu ile tatlandırılmış, kremamsı latte</p>
+                            <a href="vanilla-latte.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="vanilla-latte.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Karamelli Macchiato -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/caramel-macchiato.jpg" alt="Karamel Macchiato" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Karamel Macchiato</h2>
+                            <p class="recipe-description">Karamel soslu, süt köpüklü espresso keyfi</p>
+                            <a href="caramel-macchiato.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="caramel-macchiato.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Fındıklı Mocha -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/findikli-mocha.jpg" alt="Fındıklı Mocha" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Fındıklı Mocha</h2>
+                            <p class="recipe-description">Espresso, sıcak çikolata, süt ve fındık şurubunun muhteşem uyumuyla hazırlanan, zengin ve aromatik bir içecek.</p>
+                            <a href="findikli-mocha.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="findikli-mocha.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Geleneksel Kahveler -->
+            <div id="geleneksel" class="category-section">
+                <h2 class="category-title">Geleneksel Kahveler</h2>
+                <div class="all-recipes">
+                    <!-- Türk Kahvesi -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/turkish-coffee.jpg" alt="Türk Kahvesi" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Türk Kahvesi</h2>
+                            <p class="recipe-description">İnce öğütülmüş kahve çekirdeklerinin cezve içinde su ile kaynatılmasıyla hazırlanan, köpüklü ve aromatik bir içecek.</p>
+                            <a href="turkish-coffee.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="turkish-coffee.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Dibek Kahvesi -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/dibek-coffee.jpg" alt="Dibek Kahvesi" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Dibek Kahvesi</h2>
+                            <p class="recipe-description">Kahve çekirdeklerinin dibek adı verilen taş havanlarda dövülerek hazırlanan, geleneksel bir Türk kahvesi çeşidi.</p>
+                            <a href="dibek-coffee.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="dibek-coffee.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Menengiç Kahvesi -->
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <img src="images/recipes/menengic.jpg" alt="Menengiç Kahvesi" class="recipe-image">
+                        </div>
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">Menengiç Kahvesi</h2>
+                            <p class="recipe-description">Menengiç ağacının meyvelerinden elde edilen, kafeinsiz ve doğal bir içecek.</p>
+                            <a href="menengic-coffee.html" class="view-recipe-btn">Tarifi Gör</a>
+                            <button class="favorite-icon-btn" data-recipe="menengic-coffee.html">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="tooltip">Favorilere Ekle</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profil Modalı -->
+    <div id="profileModal" class="profile-modal">
+        <div class="profile-modal-content">
+            <span class="close-modal" onclick="closeProfileModal()">&times;</span>
+            <h2>Profil Bilgilerim</h2>
+            <div class="form-group">
+                <label>Ad Soyad</label>
+                <input type="text" id="profileName" readonly>
+            </div>
+            <div class="form-group">
+                <label>E-posta</label>
+                <input type="email" id="profileEmail" readonly>
+            </div>
+            <hr>
+            <h3>Şifre Değiştir</h3>
+            <form id="changePasswordForm" onsubmit="handlePasswordChange(event)">
+                <div class="form-group">
+                    <label for="currentPassword">Mevcut Şifre</label>
+                    <input type="password" id="currentPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="newProfilePassword">Yeni Şifre</label>
+                    <input type="password" id="newProfilePassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmProfilePassword">Yeni Şifre Tekrar</label>
+                    <input type="password" id="confirmProfilePassword" required>
+                </div>
+                <button type="submit" class="submit-btn">Şifreyi Güncelle</button>
+            </form>
+            <div id="passwordChangeMessage" class="message"></div>
+        </div>
+    </div>
+
+    <script>
+        function initializeRecipeRecommendations() {
+            // Direkt olarak tüm tarifleri göster
+            document.getElementById('all').style.display = 'block';
+
+            // Test sonuçlarını sessionStorage'dan al
+            const testResults = JSON.parse(sessionStorage.getItem('coffeeTestResults')) || [];
+            
+            // Test sonuçları varsa önerileri göster ve sonuçları temizle
+            if (testResults.length > 0) {
+                const recommendations = getRecommendedRecipes(testResults);
+                displayRecommendations(recommendations);
+                // Öneriler gösterildikten sonra sessionStorage'ı temizle
+                sessionStorage.removeItem('coffeeTestResults');
+                sessionStorage.removeItem('testCompleted');
+            }
+        }
+
+        function getRecommendedRecipes(results) {
+            const recommendations = new Set();
+            const reasons = new Set();
+
+            const preferences = {
+                temperature: {
+                    cold: results.includes('soguk'),
+                    hot: results.includes('sicak')
+                },
+                sweetness: {
+                    verySweet: results.includes('cok_tatli'),
+                    slightlySweet: results.includes('hafif_tatli'),
+                    noSugar: results.includes('sekersiz')
+                },
+                milk: {
+                    withMilk: results.includes('sutlu'),
+                    withoutMilk: results.includes('sutsuz'),
+                    noPreference: results.includes('fark_etmez')
+                },
+                strength: {
+                    light: results.includes('hafif'),
+                    medium: results.includes('orta'),
+                    strong: results.includes('sert')
+                },
+                flavor: {
+                    flavored: results.includes('aromali'),
+                    plain: results.includes('sade'),
+                    noPreference: results.includes('fark_etmez')
+                },
+                traditional: {
+                    yes: results.includes('evet'),
+                    no: results.includes('hayir')
+                },
+                caffeine: {
+                    withCaffeine: results.includes('kafeinli'),
+                    withoutCaffeine: results.includes('kafeinsiz')
+                },
+                brewingMethod: {
+                    espresso: results.includes('espresso'),
+                    filter: results.includes('filtre'),
+                    turkish: results.includes('turk'),
+                    coldBrew: results.includes('soguk_demleme'),
+                    noPreference: results.includes('fark_etmez')
+                }
+            };
+
+            // Geleneksel kahve tercihi
+            if (preferences.traditional.yes) {
+                reasons.add('geleneksel');
+                recommendations.add({
+                    name: 'Türk Kahvesi',
+                    file: 'turkish-coffee.html',
+                    image: 'images/recipes/turkish-coffee.jpg',
+                    description: 'İnce öğütülmüş kahve çekirdeklerinin cezve içinde su ile kaynatılmasıyla hazırlanan, köpüklü ve aromatik bir içecek'
+                });
+                recommendations.add({
+                    name: 'Dibek Kahvesi',
+                    file: 'dibek-coffee.html',
+                    image: 'images/recipes/dibek-coffee.jpg',
+                    description: 'Kahve çekirdeklerinin dibek adı verilen taş havanlarda dövülerek hazırlanan, geleneksel bir Türk kahvesi çeşidi'
+                });
+                recommendations.add({
+                    name: 'Menengiç Kahvesi',
+                    file: 'menengic-coffee.html',
+                    image: 'images/recipes/menengic.jpg',
+                    description: 'Menengiç ağacının meyvelerinden elde edilen, kafeinsiz ve doğal bir içecek'
+                });
+            }
+
+            // Soğuk kahve tercihi
+            if (preferences.temperature.cold) {
+                reasons.add('soğuk');
+                recommendations.add({
+                    name: 'Cold Brew',
+                    file: 'cold-brew.html',
+                    image: 'images/recipes/cold-brew.jpg',
+                    description: '12 saat soğuk demleme ile hazırlanan, yumuşak içimli kahve'
+                });
+                recommendations.add({
+                    name: 'Iced Latte',
+                    file: 'iced-latte.html',
+                    image: 'images/recipes/iced-latte.jpg',
+                    description: 'Soğuk süt ve espresso ile hazırlanan ferahlatıcı içecek'
+                });
+                recommendations.add({
+                    name: 'Frappuccino',
+                    file: 'frappuccino.html',
+                    image: 'images/recipes/frappuccino.jpg',
+                    description: 'Buzlu, kremsi ve tatlı bir kahve deneyimi'
+                });
+                recommendations.add({
+                    name: 'Affogato',
+                    file: 'affogato.html',
+                    image: 'images/recipes/affogato.jpg',
+                    description: 'Sıcak espresso ve soğuk dondurmanın muhteşem uyumuyla hazırlanan bir tatlı'
+                });
+            }
+
+            // Sıcak kahve tercihi
+            if (preferences.temperature.hot || !preferences.temperature.cold) {
+                reasons.add('sıcak');
+                recommendations.add({
+                    name: 'Espresso',
+                    file: 'espresso.html',
+                    image: 'images/recipes/espresso.jpg',
+                    description: 'Yüksek basınçla hazırlanan, yoğun ve aromalı kahve deneyimi'
+                });
+                recommendations.add({
+                    name: 'Americano',
+                    file: 'americano.html',
+                    image: 'images/recipes/americano.jpg',
+                    description: 'Espresso ve sıcak su ile hazırlanan, temiz ve net bir kahve deneyimi'
+                });
+            }
+
+            // Sütlü kahve tercihi
+            if (preferences.milk.withMilk || preferences.milk.noPreference) {
+                reasons.add('sütlü');
+                recommendations.add({
+                    name: 'Latte',
+                    file: 'latte.html',
+                    image: 'images/recipes/latte.jpg',
+                    description: 'Kadifemsi süt köpüğü ve yoğun espresso ile hazırlanan, dengeli ve kremamsı bir latte deneyimi'
+                });
+                recommendations.add({
+                    name: 'Cappuccino',
+                    file: 'cappuccino.html',
+                    image: 'images/recipes/cappuccino.jpg',
+                    description: 'Espresso, buharla ısıtılmış süt ve süt köpüğünün mükemmel dengesi'
+                });
+                recommendations.add({
+                    name: 'Flat White',
+                    file: 'flat-white.html',
+                    image: 'images/recipes/flat-white.jpg',
+                    description: 'İnce süt köpüğü ve çift shot espresso ile hazırlanan yoğun içim'
+                });
+            }
+
+            // Aromalı kahve tercihi
+            if (preferences.flavor.flavored || preferences.flavor.noPreference) {
+                reasons.add('aromalı');
+                recommendations.add({
+                    name: 'Vanilla Latte',
+                    file: 'vanilla-latte.html',
+                    image: 'images/recipes/vanilyali-latte.jpg',
+                    description: 'Vanilya şurubu ile tatlandırılmış, kremamsı latte'
+                });
+                recommendations.add({
+                    name: 'Karamel Macchiato',
+                    file: 'caramel-macchiato.html',
+                    image: 'images/recipes/caramel-macchiato.jpg',
+                    description: 'Karamel soslu, süt köpüklü espresso keyfi'
+                });
+                recommendations.add({
+                    name: 'Fındıklı Mocha',
+                    file: 'findikli-mocha.html',
+                    image: 'images/recipes/findikli-mocha.jpg',
+                    description: 'Espresso, sıcak çikolata, süt ve fındık şurubunun muhteşem uyumu'
+                });
+            }
+
+            // Yoğun kahve tercihi
+            if (preferences.strength.strong) {
+                reasons.add('yoğun');
+                recommendations.add({
+                    name: 'Ristretto',
+                    file: 'ristretto.html',
+                    image: 'images/recipes/ristretto.jpg',
+                    description: 'Espresso\'nun daha yoğun ve aromalı versiyonu'
+                });
+            }
+
+            // Filtre kahve tercihi
+            if (preferences.brewingMethod.filter || preferences.brewingMethod.noPreference) {
+                recommendations.add({
+                    name: 'Filtre Kahve',
+                    file: 'filtre-kahve.html',
+                    image: 'images/recipes/filtre-kahve.jpg.png',
+                    description: 'Taze çekilmiş kahve çekirdekleri ile hazırlanan, aromatik ve dengeli bir filtre kahve deneyimi'
+                });
+            }
+
+            // Tatlı kahve tercihi
+            if (preferences.sweetness.verySweet || preferences.sweetness.slightlySweet) {
+                reasons.add('tatlı');
+                recommendations.add({
+                    name: 'Mocha',
+                    file: 'mocha.html',
+                    image: 'images/recipes/mocha.jpg',
+                    description: 'Espresso, sıcak süt ve çikolatanın lezzetli buluşması'
+                });
+            }
+
+            // Kafeinsiz tercihi
+            if (preferences.caffeine.withoutCaffeine) {
+                reasons.add('kafeinsiz');
+                recommendations.add({
+                    name: 'Menengiç Kahvesi',
+                    file: 'menengic-coffee.html',
+                    image: 'images/recipes/menengic.jpg',
+                    description: 'Menengiç ağacının meyvelerinden elde edilen, kafeinsiz ve doğal bir içecek'
+                });
+            }
+
+            const reasonsArray = Array.from(reasons);
+            const recommendationReason = reasonsArray.length > 0 
+                ? `${reasonsArray.join(', ')} tercihlerinize uygun olarak önerilen tarifler:`
+                : 'Tercihlerinize uygun tarifler:';
+
+            return {
+                recipes: Array.from(recommendations),
+                reason: recommendationReason
+            };
+        }
+
+        function displayRecommendations(data) {
+            if (data.recipes.length === 0) return;
+
+            const recommendationsSection = document.createElement('div');
+            recommendationsSection.className = 'recommendations-section';
+            recommendationsSection.innerHTML = `
+                <h2 class="section-title">${data.reason}</h2>
+                <div class="recommendations-grid"></div>
+            `;
+
+            const recommendationsGrid = recommendationsSection.querySelector('.recommendations-grid');
+            data.recipes.forEach(recipe => {
+                const recipeCard = document.createElement('div');
+                recipeCard.className = 'recipe-card recommended';
+                recipeCard.innerHTML = `
+                    <div class="recipe-header">
+                        <img src="${recipe.image}" alt="${recipe.name}" class="recipe-image">
+                    </div>
+                    <div class="recipe-content">
+                        <h2 class="recipe-title">${recipe.name}</h2>
+                        <p class="recipe-description">${recipe.description}</p>
+                        <a href="${recipe.file}" class="view-recipe-btn">Tarifi Gör</a>
+                        <button class="favorite-icon-btn" data-recipe="${recipe.file}">
+                            <i class="fa-regular fa-heart"></i>
+                            <span class="tooltip">Favorilere Ekle</span>
+                        </button>
+                    </div>
+                `;
+                recommendationsGrid.appendChild(recipeCard);
+            });
+
+            const recipesContainer = document.querySelector('.recipe-container');
+            recipesContainer.insertBefore(recommendationsSection, recipesContainer.firstChild);
+
+            const favBtn = recipeCard.querySelector('.favorite-icon-btn');
+            if (favBtn) {
+                updateSingleFavoriteButton(favBtn);
+                favBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const recipeFile = favBtn.getAttribute('data-recipe');
+                    if (!isUserLoggedIn()) {
+                        openLoginModal();
+                        return;
+                    }
+                    toggleFavorite(recipeFile);
+                    updateSingleFavoriteButton(favBtn);
+                });
+            }
+        }
+
+        // Sayfa yüklendiğinde
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tüm tarifleri göster
+            initializeRecipeRecommendations();
+
+            // Kategori linklerini dinle
+            document.querySelectorAll('.category-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const categoryId = this.getAttribute('href').slice(1);
+                    switchCategory(categoryId);
+                });
+            });
+
+            // Varsayılan olarak 'all' kategorisini göster
+            switchCategory('all');
+
+            updateFavoriteButtons();
+            document.querySelectorAll('.favorite-icon-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const recipeFile = btn.getAttribute('data-recipe');
+                    toggleFavorite(recipeFile);
+                });
+            });
+
+            renderFeaturedCoffee();
+        });
+
+        function switchCategory(categoryId) {
+            document.querySelectorAll('.category-section').forEach(section => {
+                section.style.display = 'none';
+            });
+
+            document.querySelectorAll('.category-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            const selectedCategory = document.getElementById(categoryId);
+            if (selectedCategory) {
+                selectedCategory.style.display = 'block';
+                const activeLink = document.querySelector(`a[href="#${categoryId}"]`);
+                if (activeLink) {
+                    activeLink.classList.add('active');
+                }
+            }
+        }
+
+        function openProfileModal() {
+            const profileModal = document.getElementById('profileModal');
+            const savedUser = JSON.parse(localStorage.getItem('user'));
+            if (savedUser) {
+                document.getElementById('profileName').value = savedUser.name;
+                document.getElementById('profileEmail').value = savedUser.email;
+            }
+            profileModal.style.display = 'block';
+            document.body.classList.add('modal-open');
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profileModal').style.display = 'none';
+            document.body.classList.remove('modal-open');
+        }
+
+        async function handlePasswordChange(event) {
+            event.preventDefault();
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newProfilePassword').value;
+            const confirmPassword = document.getElementById('confirmProfilePassword').value;
+            const messageDiv = document.getElementById('passwordChangeMessage');
+            if (newPassword !== confirmPassword) {
+                messageDiv.textContent = 'Yeni şifreler eşleşmiyor';
+                messageDiv.className = 'message error';
+                messageDiv.style.display = 'block';
+                return;
+            }
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    messageDiv.textContent = 'Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.';
+                    messageDiv.className = 'message error';
+                    messageDiv.style.display = 'block';
+                    setTimeout(() => { window.location.reload(); }, 2000);
+                    return;
+                }
+                const response = await fetch('http://127.0.0.1:5000/update-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        current_password: currentPassword,
+                        new_password: newPassword
+                    })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    messageDiv.textContent = 'Şifreniz başarıyla güncellendi';
+                    messageDiv.className = 'message success';
+                    event.target.reset();
+                    setTimeout(() => { closeProfileModal(); }, 2000);
+                } else {
+                    messageDiv.textContent = data.error || 'Şifre değiştirme işlemi başarısız';
+                    messageDiv.className = 'message error';
+                }
+            } catch (error) {
+                messageDiv.textContent = 'Sunucuya bağlanılamadı. Lütfen internet bağlantınızı kontrol edin.';
+                messageDiv.className = 'message error';
+            } finally {
+                messageDiv.style.display = 'block';
+            }
+        }
+
+        window.onclick = function(event) {
+            const profileModal = document.getElementById('profileModal');
+            if (event.target == profileModal) {
+                closeProfileModal();
+            }
+        }
+
+        function isRecipeFavorite(recipeFile) {
+            const user = localStorage.getItem('user');
+            if (!user) return false;
+            let favorites = JSON.parse(localStorage.getItem('favorites') || '{}');
+            const email = JSON.parse(user).email;
+            return favorites[email] && favorites[email].includes(recipeFile);
+        }
+
+        function updateFavoriteButtons() {
+            document.querySelectorAll('.favorite-icon-btn').forEach(btn => {
+                const recipeFile = btn.getAttribute('data-recipe');
+                if (!isUserLoggedIn()) {
+                    btn.querySelector('i').className = 'fa-regular fa-heart';
+                    btn.querySelector('i').style.color = '#8B6B4E';
+                    btn.querySelector('.tooltip').textContent = 'Favorilere Ekle';
+                    btn.onclick = function() { openLoginModal(); };
+                    return;
+                }
+                if (isRecipeFavorite(recipeFile)) {
+                    btn.querySelector('i').className = 'fa-solid fa-heart';
+                    btn.querySelector('i').style.color = '#e74c3c';
+                    btn.querySelector('.tooltip').textContent = 'Favorilerden Çıkar';
+                } else {
+                    btn.querySelector('i').className = 'fa-regular fa-heart';
+                    btn.querySelector('i').style.color = '#8B6B4E';
+                    btn.querySelector('.tooltip').textContent = 'Favorilere Ekle';
+                }
+            });
+        }
+
+        function toggleFavorite(recipeFile) {
+            if (!isUserLoggedIn()) {
+                openLoginModal();
+                return;
+            }
+            const user = localStorage.getItem('user');
+            if (!user) {
+                alert('Favorilere eklemek için giriş yapmalısınız!');
+                return;
+            }
+            let favorites = JSON.parse(localStorage.getItem('favorites') || '{}');
+            const email = JSON.parse(user).email;
+            if (!favorites[email]) favorites[email] = [];
+            if (favorites[email].includes(recipeFile)) {
+                favorites[email] = favorites[email].filter(f => f !== recipeFile);
+            } else {
+                favorites[email].push(recipeFile);
+            }
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            updateFavoriteButtons();
+        }
+
+        function isUserLoggedIn() {
+            return !!localStorage.getItem('user');
+        }
+
+        function openLoginModal() {
+            const modal = document.getElementById('loginModal');
+            if (modal) modal.style.display = 'block';
+            document.body.classList.add('modal-open');
+        }
+
+        function updateSingleFavoriteButton(btn) {
+            const recipeFile = btn.getAttribute('data-recipe');
+            if (isRecipeFavorite(recipeFile)) {
+                btn.querySelector('i').className = 'fa-solid fa-heart';
+                btn.querySelector('i').style.color = '#e74c3c';
+                btn.querySelector('.tooltip').textContent = 'Favorilerden Çıkar';
+            } else {
+                btn.querySelector('i').className = 'fa-regular fa-heart';
+                btn.querySelector('i').style.color = '#8B6B4E';
+                btn.querySelector('.tooltip').textContent = 'Favorilere Ekle';
+            }
+        }
+
+        function updateNavbarAuthUI() {
+            const user = localStorage.getItem('user');
+            const profileBtn = document.querySelector('.profile-button');
+            const logoutBtn = document.querySelector('.logout-button');
+            const loginBtn = document.querySelector('.login-btn');
+            if (user) {
+                if (profileBtn) profileBtn.style.display = 'flex';
+                if (logoutBtn) logoutBtn.style.display = 'flex';
+                if (loginBtn) loginBtn.style.display = 'none';
+            } else {
+                if (profileBtn) profileBtn.style.display = 'none';
+                if (logoutBtn) logoutBtn.style.display = 'none';
+                if (loginBtn) loginBtn.style.display = 'flex';
+            }
+        }
+        window.addEventListener('DOMContentLoaded', updateNavbarAuthUI);
+
+        function handleLogout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+
+        // Haftanın Kahvesi için tarifler listesi
+        const recipes = [
+          { name: "Filtre Kahve", image: "images/recipes/filtre-kahve.jpg.png", link: "filtre-kahve.html" },
+          { name: "Latte", image: "images/recipes/latte.jpg", link: "latte.html" },
+          { name: "Cappuccino", image: "images/recipes/cappuccino.jpg", link: "cappuccino.html" },
+          { name: "Mocha", image: "images/recipes/mocha.jpg", link: "mocha.html" },
+          { name: "Americano", image: "images/recipes/americano.jpg", link: "americano.html" },
+          { name: "Espresso", image: "images/recipes/espresso.jpg", link: "espresso.html" },
+          { name: "Ristretto", image: "images/recipes/ristretto.jpg", link: "ristretto.html" },
+          { name: "Flat White", image: "images/recipes/flat-white.jpg", link: "flat-white.html" },
+          { name: "Cold Brew", image: "images/recipes/cold-brew.jpg", link: "cold-brew.html" },
+          { name: "Iced Latte", image: "images/recipes/iced-latte.jpg", link: "iced-latte.html" },
+          { name: "Frappuccino", image: "images/recipes/frappuccino.jpg", link: "frappuccino.html" },
+          { name: "Vanilyalı Latte", image: "images/recipes/vanilyali-latte.jpg", link: "vanilla-latte.html" },
+          { name: "Karamel Macchiato", image: "images/recipes/caramel-macchiato.jpg", link: "caramel-macchiato.html" },
+          { name: "Fındıklı Mocha", image: "images/recipes/findikli-mocha.jpg", link: "findikli-mocha.html" },
+          { name: "Türk Kahvesi", image: "images/recipes/turkish-coffee.jpg", link: "turkish-coffee.html" },
+          { name: "Dibek Kahvesi", image: "images/recipes/dibek-coffee.jpg", link: "dibek-coffee.html" }
+        ];
+        function getWeekNumber() {
+          const now = new Date();
+          const start = new Date(now.getFullYear(), 0, 1);
+          const diff = (now - start + ((start.getDay() + 6) % 7) * 86400000) / 86400000;
+          return Math.floor(diff / 7);
+        }
+        const week = getWeekNumber();
+        const recipe = recipes[week % recipes.length];
+        // Haftanın Kahvesi kutusunu sadece ilgili kategoride göster
+        function renderFeaturedCoffee() {
+          const container = document.getElementById('featured-coffee-container');
+          if (!container) return;
+          container.innerHTML = `
+            <div class="featured-coffee" style="margin-bottom:2.5rem; text-align:center;">
+              <h2 style="font-size:2.2rem; color:var(--accent-color); margin-bottom:1.2rem;">☕ Haftanın Kahvesi</h2>
+              <a href="${recipe.link}" style="display:inline-block; text-decoration:none; color:inherit;">
+                <img src="${recipe.image}" alt="${recipe.name}" style="width:100%;max-width:320px;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.08);margin-bottom:1rem;">
+                <h3 style="font-size:1.5rem; color:var(--primary-color); margin:0;">${recipe.name}</h3>
+              </a>
+            </div>
+          `;
+        }
+    </script>
+</body>
+</html> 

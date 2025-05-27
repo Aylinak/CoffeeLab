@@ -1,0 +1,1826 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoffeeLab</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        :root {
+            --primary-color: #2C3E50;
+            --secondary-color: #34495E;
+            --accent-color: #2b1502;
+            --text-color: #333;
+            --background-color: #f1efec;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #d4c4b5, #f5e6d3);
+            color: var(--text-color);
+            overflow: hidden; /* Sayfanın kaydırılmasını engellemek için */
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            background: rgba(158, 125, 98, 0.95); /* Eski kahverengi tonu */
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.8rem;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .logo i {
+            font-size: 2.2rem;
+            color: white;
+        }
+
+        .logo .accent {
+            color: var(--accent-color);
+            font-weight: 800;
+        }
+
+        .nav-links a {
+            margin-left: 2rem;
+            text-decoration: none;
+            color: white;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: white;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 100vh;
+            margin-top: 0;
+        }
+
+        #myVideo {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-content {
+            padding-top: 80px;
+            position: relative;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            background: rgba(0,0,0,0.5);
+            padding: 2rem;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .hero-content h1 .accent {
+            color: var(--accent-color);
+        }
+
+        .hero-content p {
+            font-size: 1.4rem;
+            color: #ECF0F1;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            margin-top: 2rem;
+            transition: transform 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .cta-button:hover {
+            background: #2b1502;
+            transform: translateY(-3px);
+        }
+
+        /* Recipes Section */
+        .recipes-section {
+            padding: 5rem 10%;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--primary-color);
+        }
+
+        .recipes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Recipe Card Styles */
+        .recipe-card {
+            position: relative;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .recipe-image {
+            position: relative;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .image-gallery {
+            position: absolute;
+            bottom: -100%;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            display: flex;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(0,0,0,0.7);
+            transition: bottom 0.3s ease;
+        }
+
+        .gallery-img {
+            height: 60px;
+            width: 60px;
+            object-fit: cover;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-img:hover {
+            transform: scale(1.1);
+        }
+
+        .recipe-card:hover .image-gallery {
+            bottom: 0;
+        }
+
+        .recipe-card:hover .main-image {
+            transform: scale(1.1);
+        }
+
+        .difficulty {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            color: white;
+        }
+
+        .stars {
+            color: #ffd700;
+            margin-top: 0.5rem;
+        }
+
+        .recipe-content {
+            padding: 1.5rem;
+        }
+
+        .recipe-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .recipe-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+
+        .recipe-card:hover .recipe-title::after {
+            width: 100%;
+        }
+
+        .recipe-info {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+            color: #666;
+        }
+
+        .recipe-info span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .recipe-description {
+            color: #666;
+            margin: 1rem 0;
+            line-height: 1.6;
+        }
+
+        .recipe-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .recipe-btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .recipe-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .recipe-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+                /* Modal Styles */
+                .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1001;
+        }
+
+        .modal-content {
+            position: relative;
+            background: white;
+            margin: 5% auto;
+            padding: 2rem;
+            width: 80%;
+            max-width: 800px;
+            border-radius: 15px;
+            animation: modalOpen 0.3s ease;
+        }
+
+        .close {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .recipe-meta {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            color: #666;
+        }
+
+        .tips {
+            list-style: none;
+            padding: 1rem;
+            background: #f8f8f8;
+            border-radius: 8px;
+        }
+
+        .tips li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.5rem 0;
+            color: #555;
+        }
+
+        .tips i {
+            color: var(--accent-color);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes modalOpen {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+
+        .recipe-video-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%;
+            margin: 2rem 0;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .recipe-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .recipe-modal-title {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 1rem;
+        }
+
+        .recipe-details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .ingredients-list li, .steps-list li {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem 0;
+            animation: fadeInLeft 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        .ingredients-list li {
+            animation-delay: calc(var(--i) * 0.1s);
+        }
+
+        .step-number {
+            background: var(--accent-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .tips-container {
+            background: #f8f8f8;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .recipe-video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            height: 0;
+            margin: 2rem 0;
+        }
+
+        .recipe-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 1000px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+        }
+
+        .recipe-meta {
+            display: flex;
+            justify-content: space-around;
+            margin: 2rem 0;
+            padding: 1rem;
+            background: #f8f8f8;
+            border-radius: 10px;
+        }
+
+        .recipe-details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .recipe-details-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .recipe-animation-wrapper {
+                max-width: 100%;
+            }
+        }
+
+        .recipe-video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            margin: 2rem 0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .recipe-video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .recipe-animation-wrapper {
+            width: 100%;
+            max-width: 500px;
+            margin: 2rem auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .recipe-animation {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 15px;
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+        }
+
+        .recipe-meta {
+            display: flex;
+            justify-content: space-around;
+            margin: 2rem 0;
+            padding: 1rem;
+            background: #f8f8f8;
+            border-radius: 10px;
+        }
+
+        .recipe-details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .recipe-details-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .recipe-animation-wrapper {
+                max-width: 100%;
+            }
+        }
+
+        /* Font importları */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&family=Roboto:wght@300;400;500&display=swap');
+
+        .login-btn {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-left: 2rem;
+            position: relative;
+        }
+
+        .user-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-top: 0.5rem;
+            min-width: 150px;
+        }
+
+        .user-menu.active {
+            display: block;
+        }
+
+        .user-menu-item {
+            padding: 0.8rem 1rem;
+            color: var(--text-color);
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .user-menu-item:hover {
+            background: #f5f5f5;
+        }
+
+        .user-menu-item.logout {
+            color: #dc3545;
+            border-top: 1px solid #eee;
+        }
+
+        .login-btn:hover {
+            background: white;
+            color: var(--accent-color);
+        }
+
+        .login-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0,0,0,0.8);
+            z-index: 1001;
+            padding: 2rem;
+        }
+
+        .login-content {
+            position: relative;
+            background: white;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 45%;
+            height: 90vh;
+            max-width: 600px;
+            border-radius: 15px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+            overflow-y: auto;
+            -ms-overflow-style: none;
+        }
+
+        .login-content::-webkit-scrollbar {
+            display: none;
+        }
+
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        .login-header {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .login-header i {
+            font-size: 3rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .login-tabs {
+            display: flex;
+            margin: 2rem auto;
+            border-bottom: 2px solid #eee;
+            max-width: 400px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            background: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab-btn.active {
+            color: var(--accent-color);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #666;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #2b1502;
+        }
+
+        .social-login {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn.google {
+            background: #2b1502;
+            color: white;
+        }
+
+        .social-btn.facebook {
+            background: #4267B2;
+            color: white;
+        }
+
+        .close-login {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: auto;
+        }
+
+        .form-group.terms {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group input::placeholder {
+            color: #999;
+        }
+
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .form-container.hidden {
+            opacity: 0;
+            transform: translateX(20px);
+        }
+
+        .terms-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .terms-checkbox input[type="checkbox"] {
+            width: auto;
+            margin-right: 8px;
+        }
+
+        .terms-checkbox label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .terms-checkbox a {
+            color: #2b1502;
+            text-decoration: underline;
+        }
+
+        .terms-checkbox a:hover {
+            color: #4a2504;
+        }
+
+        .terms-content {
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 0 1rem;
+        }
+
+        .terms-section {
+            color: #666;
+        }
+
+        .terms-section h3 {
+            color: var(--accent-color);
+            margin: 1.5rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .terms-list {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .terms-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .terms-list li::before {
+            content: '•';
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        /* Özel scrollbar tasarımı */
+        .terms-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .terms-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .terms-content::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 4px;
+        }
+
+        .terms-content::-webkit-scrollbar-thumb:hover {
+            background: #4a2504;
+        }
+
+        .message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Profil Modalı */
+        .profile-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0; top: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.35);
+            -webkit-backdrop-filter: blur(2px);
+            backdrop-filter: blur(2px);
+            justify-content: center;
+            align-items: center;
+        }
+        .profile-modal.active {
+            display: flex;
+        }
+        .profile-modal-content {
+            background: #fff;
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+            min-width: 360px;
+            max-width: 480px;
+            width: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            margin: 0 auto;
+            height: auto;
+            max-height: none;
+            overflow: visible;
+        }
+        .profile-modal-content input, .profile-modal-content button {
+            padding: 0.6rem;
+            font-size: 0.97rem;
+        }
+        .profile-modal-content h2, .profile-modal-content h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        .form-group label {
+            font-size: 0.97rem;
+        }
+        .close-modal {
+            position: absolute;
+            right: 1.2rem;
+            top: 1.2rem;
+            font-size: 2rem;
+            color: #8B6B4E;
+            cursor: pointer;
+        }
+
+        .profile-section {
+            display: none;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .profile-section .user-name {
+            color: white;
+            font-weight: 500;
+        }
+
+        .profile-section .profile-button,
+        .profile-section .logout-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .profile-section .profile-button:hover,
+        .profile-section .logout-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .profile-section .profile-icon {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-coffee"></i>
+            <span>Coffee<span class="accent">Lab</span></span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Anasayfa</a>
+            <a href="recipes.html">Tarifler</a>
+            <a href="favorites.html">Favoriler</a>
+            <button class="login-btn" onclick="handleLoginButtonClick()">
+                <i class="fas fa-user"></i> Giriş Yap
+            </button>
+            <div class="profile-section">
+                <span class="user-name" id="userNameDisplay"></span>
+                <button class="profile-button" onclick="openProfileModal()">
+                    <svg class="profile-icon" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                    </svg>
+                    Profilim
+                </button>
+                <button class="logout-button" onclick="handleLogout()">
+                    <svg class="profile-icon" viewBox="0 0 24 24">
+                        <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                    </svg>
+                    Çıkış Yap
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <header id="home">
+        <div class="hero">
+            <img src="./images/arkaplan.jpeg" id="myVideo" alt="Kahve Hazırlama">
+            <div class="hero-content">
+                <h1 data-aos="fade-down">Coffee<span class="accent">Lab</span></h1>
+                <p data-aos="fade-up" data-aos-delay="200">Kahve Tutkunlarına Özel Tarifler!</p>
+                <a href="coffee-test.html" class="cta-button" data-aos="zoom-in" data-aos-delay="400">Kahveni Keşfet</a>
+            </div>
+        </div>
+    </header>
+
+    <section id="recipes" class="recipes-section">
+        <h2 class="section-title" data-aos="fade-up">Popüler Tarifler</h2>
+        
+        <div class="recipes-grid">
+            <div class="recipe-card" data-aos="fade-up">
+                <div class="recipe-image">
+                    <img src="https://images.unsplash.com/photo-1534778101976-62847782c00e?ixlib=rb-4.0.3" alt="Latte Art" class="main-image">
+                    <div class="image-gallery">
+                        <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?ixlib=rb-4.0.3" alt="Latte 1" class="gallery-img">
+                        <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?ixlib=rb-4.0.3" alt="Latte 2" class="gallery-img">
+                        <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-4.0.3" alt="Latte 3" class="gallery-img">
+                    </div>
+                    <div class="difficulty">
+                        <span>Zorluk: Orta</span>
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="recipe-content">
+                    <h3 class="recipe-title">Latte Art</h3>
+                    <div class="recipe-info">
+                        <span><i class="far fa-clock"></i> 10 dk</span>
+                        <span><i class="fas fa-thermometer-half"></i> 65°C</span>
+                        <span><i class="fas fa-mug-hot"></i> 1 porsiyon</span>
+                    </div>
+                    <p class="recipe-description">Profesyonel görünümlü latteler hazırlayın</p>
+                    <button class="recipe-btn" onclick="showRecipe('latte')">
+                        <i class="fas fa-book-open"></i> Tarifi Gör
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tarif Modal -->
+    <div id="recipeModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="recipeDetails"></div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="login-modal">
+        <div class="login-content">
+            <span class="close-login" onclick="closeLoginModal()">&times;</span>
+            <div class="login-header">
+                <i class="fas fa-coffee"></i>
+                <h2>Coffee<span class="accent">Lab</span></h2>
+            </div>
+            <div class="login-tabs">
+                <button class="tab-btn active" onclick="switchTab('login')">Giriş Yap</button>
+                <button class="tab-btn" onclick="switchTab('register')">Kayıt Ol</button>
+            </div>
+            
+            <!-- Giriş Formu -->
+            <div id="loginForm" class="form-container">
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="email">E-posta</label>
+                        <input type="email" id="email" required placeholder="ornek@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Şifre</label>
+                        <input type="password" id="password" required placeholder="********">
+                    </div>
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox"> Beni Hatırla
+                        </label>
+                        <a href="#" onclick="openForgotPasswordModal()">Şifremi Unuttum</a>
+                    </div>
+                    <button type="submit" class="submit-btn">Giriş Yap</button>
+                    <div id="loginMessage" class="message"></div>
+                </form>
+                <div class="social-login">
+                    <p>Veya şununla giriş yap:</p>
+                    <div class="social-buttons">
+                        <button onclick="handleGoogleLogin()" class="social-btn google">
+                            <i class="fab fa-google"></i> Google ile Giriş Yap
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kayıt Formu -->
+            <div id="registerForm" class="form-container hidden">
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label for="regName">Ad Soyad</label>
+                        <input type="text" id="regName" required placeholder="Adınız Soyadınız" minlength="3">
+                    </div>
+                    <div class="form-group">
+                        <label for="regEmail">E-posta</label>
+                        <input type="email" id="regEmail" required placeholder="ornek@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="regPassword">Şifre</label>
+                        <input type="password" id="regPassword" required placeholder="********" minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label for="regPasswordConfirm">Şifre Tekrar</label>
+                        <input type="password" id="regPasswordConfirm" required placeholder="********" minlength="6">
+                    </div>
+                    <div class="form-group terms">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="termsCheckbox" required>
+                            <span>
+                                <a href="#" onclick="openTerms(); return false;">Kullanıcı Sözleşmesini</a> okudum ve kabul ediyorum
+                            </span>
+                        </label>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-user-plus"></i> Kayıt Ol
+                    </button>
+                    <div id="registerMessage" class="message"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kullanıcı Sözleşmesi Modal -->
+    <div id="termsModal" class="login-modal">
+        <div class="login-content">
+            <span class="close-login" onclick="closeTermsModal()">&times;</span>
+            <div class="login-header">
+                <i class="fas fa-file-contract"></i>
+                <h2>Kullanıcı Sözleşmesi</h2>
+            </div>
+            <div class="terms-content">
+                <div class="terms-section">
+                    <h3>1. Giriş</h3>
+                    <p>Bu kullanıcı sözleşmesi, CoffeeLab platformunu kullanımınızı düzenleyen şartları ve koşulları içerir. Platformu kullanarak bu sözleşmedeki tüm şartları kabul etmiş sayılırsınız.</p>
+
+                    <h3>2. Hizmet Kullanım Şartları</h3>
+                    <ul class="terms-list">
+                        <li>Platform üzerinden yapılan tüm işlemler kayıt altına alınmaktadır.</li>
+                        <li>Kullanıcılar, platform üzerinden yaptıkları tüm işlemlerden kendileri sorumludur.</li>
+                        <li>Kullanıcılar, platformu kötüye kullanmamayı taahhüt eder.</li>
+                    </ul>
+
+                    <h3>3. Gizlilik</h3>
+                    <ul class="terms-list">
+                        <li>Kullanıcı bilgileri gizli tutulacak ve üçüncü taraflarla paylaşılmayacaktır.</li>
+                        <li>Kullanıcılar, hesap güvenliklerinden kendileri sorumludur.</li>
+                    </ul>
+
+                    <h3>4. Sorumluluk Reddi</h3>
+                    <ul class="terms-list">
+                        <li>Platform, hizmetlerinin kesintisiz sunulacağını garanti etmez.</li>
+                        <li>Platform, önceden haber vermeksizin hizmetlerinde değişiklik yapma hakkını saklı tutar.</li>
+                    </ul>
+                </div>
+                <div class="button-container">
+                    <button class="submit-btn" onclick="acceptTerms()">
+                        <i class="fas fa-check-circle"></i>
+                        Okudum ve Kabul Ediyorum
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Şifre Sıfırlama Modal -->
+    <div id="forgotPasswordModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Şifre Sıfırlama</h2>
+            <form id="forgotPasswordForm">
+                <div class="form-group">
+                    <label for="forgotEmail">Kayıtlı Email Adresiniz:</label>
+                    <input type="email" id="forgotEmail" name="email" required>
+                </div>
+                <button type="submit" class="submit-btn">Yeni Şifre Gönder</button>
+            </form>
+            <div id="resetMessage" class="message"></div>
+        </div>
+    </div>
+
+    <!-- Şifre Sıfırlama Modal -->
+    <div id="resetPasswordModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="auth-container">
+                <div class="auth-box">
+                    <h2>Yeni Şifre Belirle</h2>
+                    <form id="resetPasswordForm">
+                        <div class="form-group">
+                            <label for="newPassword">Yeni Şifre</label>
+                            <input type="password" id="newPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Şifre Tekrar</label>
+                            <input type="password" id="confirmPassword" required>
+                        </div>
+                        <button type="submit" class="btn-primary">Şifreyi Güncelle</button>
+                    </form>
+                    <div id="resetPasswordMessage" class="message"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profil Modalı -->
+    <div id="profileModal" class="profile-modal">
+        <div class="profile-modal-content">
+            <span class="close-modal" onclick="closeProfileModal()">&times;</span>
+            <h2>Profil Bilgilerim</h2>
+            <div class="form-group">
+                <label>Ad Soyad</label>
+                <input type="text" id="profileName" readonly>
+            </div>
+            <div class="form-group">
+                <label>E-posta</label>
+                <input type="email" id="profileEmail" readonly>
+            </div>
+            <hr>
+            <h3>Şifre Değiştir</h3>
+            <form id="changePasswordForm" onsubmit="handlePasswordChange(event)">
+                <div class="form-group">
+                    <label for="currentPassword">Mevcut Şifre</label>
+                    <input type="password" id="currentPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="newProfilePassword">Yeni Şifre</label>
+                    <input type="password" id="newProfilePassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmProfilePassword">Yeni Şifre Tekrar</label>
+                    <input type="password" id="confirmProfilePassword" required>
+                </div>
+                <button type="submit" class="submit-btn">Şifreyi Güncelle</button>
+            </form>
+            <div id="passwordChangeMessage" class="message"></div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+
+        function openLoginModal() {
+            document.getElementById('loginModal').style.display = 'block';
+            document.body.classList.add('modal-open');
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+            document.body.classList.remove('modal-open');
+        }
+
+        function switchTab(tab) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const loginMessage = document.getElementById('loginMessage');
+            const registerMessage = document.getElementById('registerMessage');
+            const tabs = document.querySelectorAll('.tab-btn');
+            
+            // Mesaj kutularını temizle
+            loginMessage.textContent = '';
+            loginMessage.style.display = 'none';
+            registerMessage.textContent = '';
+            registerMessage.style.display = 'none';
+            
+            tabs.forEach(t => t.classList.remove('active'));
+            
+            if (tab === 'login') {
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                tabs[0].classList.add('active');
+                // Formları temizle
+                document.getElementById('loginForm').reset();
+            } else {
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+                tabs[1].classList.add('active');
+                // Formları temizle
+                document.getElementById('registerForm').reset();
+            }
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const response = await fetch('http://127.0.0.1:5000/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        email: email, 
+                        password: password 
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    
+                    alert('Giriş başarılı!');
+                    closeLoginModal();
+                    updateUIAfterLogin(data.user);
+                    
+                    // Login başarılı event'ini tetikle
+                    window.dispatchEvent(new Event('loginSuccess'));
+                } else {
+                    alert(data.error || 'Giriş başarısız');
+                }
+            } catch (error) {
+                console.error('Hata:', error);
+                alert('Bağlantı hatası: Sunucuya ulaşılamıyor');
+            }
+        }
+
+        let termsAccepted = false;
+
+        function openTerms() {
+            document.getElementById('termsModal').style.display = 'block';
+            document.body.classList.add('modal-open');
+        }
+
+        function closeTermsModal() {
+            document.getElementById('termsModal').style.display = 'none';
+            document.body.classList.remove('modal-open');
+        }
+
+        function acceptTerms() {
+            termsAccepted = true;
+            document.getElementById('termsCheckbox').checked = true;
+            closeTermsModal();
+            
+            // Başarılı mesajı göster
+            const messageDiv = document.getElementById('registerMessage');
+            messageDiv.textContent = 'Kullanıcı sözleşmesi kabul edildi.';
+            messageDiv.className = 'message success';
+            messageDiv.style.display = 'block';
+            
+            // 2 saniye sonra mesajı gizle
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 2000);
+        }
+
+        async function handleRegister(event) {
+            event.preventDefault();
+            
+            const messageDiv = document.getElementById('registerMessage');
+            const termsCheckbox = document.getElementById('termsCheckbox');
+            
+            if (!termsCheckbox.checked) {
+                messageDiv.textContent = 'Lütfen kullanıcı sözleşmesini okuyup kabul edin.';
+                messageDiv.className = 'message error';
+                messageDiv.style.display = 'block';
+                return;
+            }
+            
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const passwordConfirm = document.getElementById('regPasswordConfirm').value;
+            
+            if (password !== passwordConfirm) {
+                messageDiv.textContent = 'Şifreler eşleşmiyor!';
+                messageDiv.className = 'message error';
+                messageDiv.style.display = 'block';
+                return;
+            }
+            
+            try {
+                const response = await fetch('http://127.0.0.1:5000/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        name: name, 
+                        email: email, 
+                        password: password 
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    messageDiv.textContent = 'Kayıt başarılı! Giriş yapabilirsiniz.';
+                    messageDiv.className = 'message success';
+                    
+                    // Formu temizle
+                    event.target.reset();
+                    
+                    // 2 saniye sonra giriş sekmesine geç
+                    setTimeout(() => {
+                        switchTab('login');
+                    }, 2000);
+                } else {
+                    messageDiv.textContent = data.error || 'Kayıt işlemi başarısız oldu.';
+                    messageDiv.className = 'message error';
+                }
+            } catch (error) {
+                console.error('Kayıt hatası:', error);
+                messageDiv.textContent = 'Sunucuya bağlanılamadı. Lütfen internet bağlantınızı kontrol edin.';
+                messageDiv.className = 'message error';
+            }
+            
+            messageDiv.style.display = 'block';
+        }
+
+        function handleLoginButtonClick() {
+            const userMenu = document.getElementById('userMenu');
+            const savedUser = localStorage.getItem('user');
+            
+            if (savedUser) {
+                // Kullanıcı giriş yapmışsa menüyü göster/gizle
+                userMenu.classList.toggle('active');
+            } else {
+                // Kullanıcı giriş yapmamışsa login modalını aç
+                openLoginModal();
+            }
+        }
+
+        function handleLogout() {
+            // Local storage'dan kullanıcı bilgilerini temizle
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            
+            // Profil bölümünü gizle
+            document.querySelector('.profile-section').style.display = 'none';
+            
+            // Giriş butonunu göster
+            document.querySelector('.login-btn').style.display = 'flex';
+            
+            // Sayfayı yenile
+            window.location.reload();
+        }
+
+        function updateUIAfterLogin(user) {
+            // Giriş butonunu gizle
+            document.querySelector('.login-btn').style.display = 'none';
+            
+            // Profil bölümünü göster
+            const profileSection = document.querySelector('.profile-section');
+            profileSection.style.display = 'flex';
+            profileSection.style.alignItems = 'center';
+            profileSection.style.gap = '1rem';
+            
+            // Kullanıcı adını güncelle
+            document.getElementById('userNameDisplay').textContent = user.name;
+            
+            // Giriş modalını kapat
+            closeLoginModal();
+        }
+
+        // Sayfa yüklendiğinde çalışacak fonksiyon
+        window.onload = async function() {
+            // Arkaplan resmini hemen ayarla
+            document.getElementById('myVideo').src = './images/arkaplan.jpeg';
+            
+            // URL'den token ve kullanıcı bilgilerini kontrol et
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            const userStr = urlParams.get('user');
+            
+            if (token && userStr) {
+                try {
+                    const user = JSON.parse(decodeURIComponent(userStr));
+                    // Kullanıcı bilgilerini kaydet
+                    localStorage.setItem('token', token);
+                    localStorage.setItem('user', JSON.stringify(user));
+                    
+                    // UI'ı güncelle
+                    updateUIAfterLogin(user);
+                    
+                    // URL'i temizle
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                } catch (error) {
+                    console.error('Token işleme hatası:', error);
+                }
+            } else {
+                // Daha önce giriş yapılmış mı kontrol et
+                checkLoginStatus();
+            }
+        }
+
+        // Giriş durumunu kontrol et
+        async function checkLoginStatus() {
+            const savedToken = localStorage.getItem('token');
+            const savedUser = localStorage.getItem('user');
+            
+            if (savedToken && savedUser) {
+                try {
+                    const user = JSON.parse(savedUser);
+                    // Token'ın geçerliliğini kontrol et
+                    const response = await fetch('http://127.0.0.1:5000/verify_token', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${savedToken}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (!response.ok) {
+                        handleLogout();
+                        return;
+                    }
+
+                    const data = await response.json();
+                    if (data.valid) {
+                        updateUIAfterLogin(user);
+                    } else {
+                        handleLogout();
+                    }
+                } catch (error) {
+                    console.error('Token doğrulama hatası:', error);
+                    handleLogout();
+                }
+            }
+        }
+
+        // Sayfa yüklendiğinde menüyü gizle
+        document.addEventListener('click', function(event) {
+            const userMenu = document.getElementById('userMenu');
+            const loginBtn = document.querySelector('.login-btn');
+            
+            if (!loginBtn.contains(event.target)) {
+                userMenu.classList.remove('active');
+            }
+        });
+
+        // Profile Modal Functions
+        function openProfileModal() {
+            const profileModal = document.getElementById('profileModal');
+            const savedUser = JSON.parse(localStorage.getItem('user'));
+            
+            if (savedUser) {
+                document.getElementById('profileName').value = savedUser.name;
+                document.getElementById('profileEmail').value = savedUser.email;
+            }
+            
+            profileModal.style.display = 'block';
+            document.body.classList.add('modal-open');
+            document.getElementById('userMenu').classList.remove('active');
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profileModal').style.display = 'none';
+            document.body.classList.remove('modal-open');
+        }
+
+        async function handlePasswordChange(event) {
+            event.preventDefault();
+            
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newProfilePassword').value;
+            const confirmPassword = document.getElementById('confirmProfilePassword').value;
+            const messageDiv = document.getElementById('passwordChangeMessage');
+            
+            if (newPassword !== confirmPassword) {
+                messageDiv.textContent = 'Yeni şifreler eşleşmiyor';
+                messageDiv.className = 'message error';
+                messageDiv.style.display = 'block';
+                return;
+            }
+            
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    messageDiv.textContent = 'Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.';
+                    messageDiv.className = 'message error';
+                    messageDiv.style.display = 'block';
+                    setTimeout(() => {
+                        handleLogout();
+                    }, 2000);
+                    return;
+                }
+
+                const response = await fetch('http://127.0.0.1:5000/update-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        current_password: currentPassword,
+                        new_password: newPassword
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    messageDiv.textContent = 'Şifreniz başarıyla güncellendi';
+                    messageDiv.className = 'message success';
+                    event.target.reset();
+                    
+                    setTimeout(() => {
+                        closeProfileModal();
+                    }, 2000);
+                } else {
+                    messageDiv.textContent = data.error || 'Şifre değiştirme işlemi başarısız';
+                    messageDiv.className = 'message error';
+                }
+                
+            } catch (error) {
+                console.error('Şifre değiştirme hatası:', error);
+                messageDiv.textContent = 'Sunucuya bağlanılamadı. Lütfen internet bağlantınızı kontrol edin.';
+                messageDiv.className = 'message error';
+            } finally {
+                messageDiv.style.display = 'block';
+            }
+        }
+
+        // Update window click event to include profile modal
+        window.onclick = function(event) {
+            const loginModal = document.getElementById('loginModal');
+            const termsModal = document.getElementById('termsModal');
+            const profileModal = document.getElementById('profileModal');
+            
+            if (event.target == loginModal) {
+                closeLoginModal();
+            } else if (event.target == termsModal) {
+                closeTermsModal();
+            } else if (event.target == profileModal) {
+                closeProfileModal();
+            }
+        }
+
+        async function handleGoogleLogin() {
+            try {
+                const response = await fetch('http://127.0.0.1:5000/auth/google');
+                const data = await response.json();
+                
+                if (data.auth_url) {
+                    window.location.href = data.auth_url;
+                } else {
+                    alert('Google ile giriş başlatılamadı');
+                }
+            } catch (error) {
+                console.error('Google giriş hatası:', error);
+                alert('Google ile giriş yapılırken bir hata oluştu');
+            }
+        }
+
+        function openForgotPasswordModal() {
+            closeLoginModal();
+            document.getElementById('forgotPasswordModal').style.display = 'block';
+            document.getElementById('forgotPasswordForm').reset();
+            document.getElementById('resetMessage').textContent = '';
+        }
+
+        function closeForgotPasswordModal() {
+            document.getElementById('forgotPasswordModal').style.display = 'none';
+            openLoginModal();
+        }
+
+        document.getElementById('forgotPasswordForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('forgotEmail').value;
+            const messageDiv = document.getElementById('resetMessage');
+            
+            try {
+                const response = await fetch('http://127.0.0.1:5000/forgot-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email: email })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    messageDiv.textContent = data.message;
+                    messageDiv.className = 'message success';
+                    setTimeout(() => {
+                        closeForgotPasswordModal();
+                    }, 3000);
+                } else {
+                    messageDiv.textContent = data.error;
+                    messageDiv.className = 'message error';
+                }
+            } catch (error) {
+                console.error('Şifre sıfırlama hatası:', error);
+                messageDiv.textContent = 'Sunucuya bağlanılamadı. Lütfen internet bağlantınızı kontrol edin.';
+                messageDiv.className = 'message error';
+            }
+            
+            messageDiv.style.display = 'block';
+        });
+
+        // Şifre sıfırlama modalını kapat
+        document.querySelectorAll('.modal .close').forEach(closeBtn => {
+            closeBtn.addEventListener('click', function() {
+                this.closest('.modal').style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>

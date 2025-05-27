@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoffeeLab - Dibek Kahvesi Tarifi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f5f5;
+            color: var(--text-color);
+            padding: 2rem;
+            min-height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-top: 80px;
+        }
+
+        .nav-container {
+            background: #8B6B4E;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+            opacity: 0.9;
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+        }
+
+        .nav-link.active {
+            opacity: 1;
+            font-weight: 600;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .profile-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            text-decoration: none;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+
+        .profile-button:hover {
+            opacity: 1;
+        }
+
+        .logout-button {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .main-content {
+            margin-top: 90px;
+        }
+        .recipe-page {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 2rem;
+        }
+        .recipe-header {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto 2rem auto;
+        }
+        .recipe-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            object-position: center;
+            border-radius: 15px;
+            display: block;
+        }
+        .recipe-content {
+            padding: 0 3rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .recipe-title {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        .recipe-description {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        .recipe-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .detail-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: #f8f8f8;
+            border-radius: 15px;
+        }
+        .detail-item i {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+        .detail-item h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        .detail-item p {
+            color: #666;
+        }
+        .recipe-section {
+            margin-bottom: 3rem;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent-color);
+        }
+        .ingredients ul, .instructions ol, .tips ul {
+            padding-left: 1.5rem;
+        }
+        .ingredients li, .instructions li, .tips li {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        .back-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            margin-top: 2rem;
+            transition: all 0.3s ease;
+        }
+        .back-button:hover {
+            background: #2b1502;
+            transform: translateY(-3px);
+        }
+        .equipment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .equipment-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8f8f8;
+            border-radius: 10px;
+        }
+        .equipment-item i {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+        }
+        .equipment-item span {
+            font-weight: 500;
+        }
+        .instruction-step {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f8f8f8;
+            border-radius: 10px;
+        }
+        .instruction-step h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        .instruction-step p {
+            color: #666;
+            line-height: 1.6;
+        }
+        .recipe-video {
+            width: 100%;
+            max-width: 1000px;
+            margin: 2rem auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .recipe-video video {
+            width: 100%;
+            display: block;
+        }
+        .video-section {
+            margin-bottom: 3rem;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .video-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .video-container video {
+            width: 100%;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-container">
+        <div class="nav-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-coffee"></i>
+                CoffeeLab
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Anasayfa</a>
+                <a href="recipes.html" class="nav-link active">Tarifler</a>
+                <a href="favorites.html" class="nav-link">Favoriler</a>
+            </div>
+            <div class="nav-right">
+                <a href="#" class="profile-button" onclick="openProfileModal(); return false;">
+                    <i class="fas fa-user"></i>
+                    Profilim
+                </a>
+                <a href="#" class="logout-button" onclick="handleLogout(); return false;">Çıkış Yap</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="main-content">
+        <div class="recipe-page">
+            <div class="recipe-header">
+                <img src="images/recipes/dibek-coffee.jpg" alt="Dibek Kahvesi" class="recipe-image">
+            </div>
+            <div class="recipe-content">
+                <h1 class="recipe-title">Dibek Kahvesi Tarifi</h1>
+                <p class="recipe-description">
+                    Dibek Kahvesi, kahve çekirdeklerinin dibek adı verilen taş havanlarda dövülerek hazırlanan, geleneksel bir Türk kahvesi çeşididir. Özel bir lezzet ve aroma sunan bu kahve, Türk kahve kültürünün önemli bir parçasıdır.
+                </p>
+                
+                <div class="recipe-details">
+                    <div class="detail-item">
+                        <i class="fas fa-clock"></i>
+                        <h4>Hazırlama Süresi</h4>
+                        <p>10-15 dakika</p>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-fire"></i>
+                        <h4>Zorluk</h4>
+                        <p>Zor</p>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-coffee"></i>
+                        <h4>Porsiyon</h4>
+                        <p>1 kişilik</p>
+                    </div>
+                </div>
+
+                <div class="recipe-section">
+                    <h2 class="section-title">Malzemeler</h2>
+                    <div class="ingredients">
+                        <ul>
+                            <li>1 tatlı kaşığı dibek kahvesi </li>
+                            <li>1 fincan su veya süt </li>
+                            <li>İsteğe bağlı: şeker (az, orta, şekerli)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="recipe-section">
+                    <h2 class="section-title">Gerekli Ekipmanlar</h2>
+                    <div class="equipment-list">
+                        <div class="equipment-item">
+                            <i class="fas fa-fire"></i>
+                            <span>Cezve</span>
+                        </div>
+                        <div class="equipment-item">
+                            <i class="fas fa-ruler"></i>
+                            <span>Ölçü kaşığı</span>
+                        </div>
+                        <div class="equipment-item">
+                            <i class="fas fa-mug-hot"></i>
+                            <span>Kahve fincanı</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recipe-section">
+                    <h2 class="section-title">Hazırlanışı</h2>
+                    <div class="instructions">
+                        <ol>
+                            <li class="instruction-step">
+                                <h4>1. Su / Süt ve Kahve Hazırlama</h4>
+                                <p>Cezveye su veya sütü ekleyin. Üzerine dövülmüş kahveyi ekleyin. İsteğe bağlı olarak şeker ekleyin.</p>
+                            </li>
+                            <li class="instruction-step">
+                                <h4>2. Karıştırma</h4>
+                                <p>Kahve ile karıştırın.</p>
+                            </li>
+                            <li class="instruction-step">
+                                <h4>3. Pişirme</h4>
+                                <p>Cezveyi orta ateşte ısıtın. Kahve köpürmeye başladığında cezveyi ateşten alın ve köpüğü fincana dökün.</p>
+                            </li>
+                            <li class="instruction-step">
+                                <h4>4. Tekrar Pişirme</h4>
+                                <p>Cezveyi tekrar ateşe koyun ve kahve tekrar köpürdüğünde fincana dökün. </p>
+                            </li>
+                            <li class="instruction-step">
+                                <h4>5. Servis</h4>
+                                <p>Kahveyi fincana dökün ve 1-2 dakika bekleyin. Dibek kahvesi genellikle lokum veya çikolata ile servis edilir.</p>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="recipe-section">
+                    <h2 class="section-title">Püf Noktaları</h2>
+                    <div class="tips">
+                        <ul>
+                            <li>Cezveyi önceden ısıtın - bu, kahvenin daha iyi pişmesini sağlar.</li>
+                            <li>Kahveyi çok hızlı pişirmeyin - yavaş pişirme daha iyi bir lezzet sağlar.</li>
+                            <li>Köpük oluşumuna dikkat edin - iyi bir dibek kahvesi için köpük önemlidir.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="video-section">
+                    <h2 class="section-title">Video Tarifi</h2>
+                    <div class="video-container">
+                        <video controls>
+                            <source src="videos/dibek_kahvesi_tarif_videosu.mp4" type="video/mp4">
+                            Tarayıcınız video oynatmayı desteklemiyor.
+                        </video>
+                    </div>
+                </div>
+
+                <a href="recipes.html" class="back-button">
+                    <i class="fas fa-arrow-left"></i> Tariflere Dön
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

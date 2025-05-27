@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoffeeLab - Cappuccino Tarifi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f5f5;
+            color: var(--text-color);
+            padding: 2rem;
+            min-height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-top: 80px;
+        }
+
+        .recipe-page {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 2rem;
+        }
+
+        .recipe-header {
+            width: 100%;
+            margin-bottom: 2rem;
+        }
+
+        .recipe-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            object-position: center;
+            border-radius: 15px;
+            display: block;
+        }
+
+        .recipe-content {
+            padding: 0 1rem;
+        }
+
+        .recipe-title {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .recipe-description {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .recipe-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .detail-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: #f8f8f8;
+            border-radius: 15px;
+        }
+
+        .detail-item i {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .detail-item h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-item p {
+            color: #666;
+        }
+
+        .recipe-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .ingredients ul, .instructions ol, .tips ul {
+            padding-left: 1.5rem;
+        }
+
+        .ingredients li, .instructions li, .tips li {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            margin-top: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #2b1502;
+            transform: translateY(-3px);
+        }
+
+        .equipment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .equipment-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8f8f8;
+            border-radius: 10px;
+        }
+
+        .equipment-item i {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        .equipment-item span {
+            font-weight: 500;
+        }
+
+        .instruction-step {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f8f8f8;
+            border-radius: 10px;
+        }
+
+        .instruction-step h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .instruction-step p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Üst çubuk stilleri */
+        .nav-container {
+            background: #8B6B4E;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+            opacity: 0.9;
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+        }
+
+        .nav-link.active {
+            opacity: 1;
+            font-weight: 600;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .profile-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            text-decoration: none;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+
+        .profile-button:hover {
+            opacity: 1;
+        }
+
+        .logout-button {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .video-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f8f8f8;
+            border-radius: 15px;
+        }
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 oran */
+            height: 0;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-container">
+        <div class="nav-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-coffee"></i>
+                CoffeeLab
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Anasayfa</a>
+                <a href="recipes.html" class="nav-link active">Tarifler</a>
+                <a href="favorites.html" class="nav-link">Favoriler</a>
+            </div>
+            <div class="nav-right">
+                <a href="profile.html" class="profile-button">
+                    <i class="fas fa-user"></i>
+                    Profilim
+                </a>
+                <a href="#" class="logout-button" onclick="handleLogout(); return false;">Çıkış Yap</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="main-content">
+        <div class="recipe-page">
+            <div class="recipe-header">
+                <img src="images/recipes/cappuccino.jpg" alt="Cappuccino" class="recipe-image">
+            </div>
+            <div class="recipe-content">
+                <h1 class="recipe-title">Cappuccino</h1>
+                <p class="recipe-description">
+                    Moka Pot ile evde kolayca cappuccino hazırlayabilirsiniz. Yoğun espresso ve bol süt köpüğüyle, kafe keyfinizi evde yaşayın.
+                </p>
+                
+                <div class="recipe-meta">
+                    <span><i class="fas fa-clock"></i> Hazırlama Süresi: 5 dk</span>
+                    <span><i class="fas fa-fire"></i> Zorluk: Orta</span>
+                    <span><i class="fas fa-coffee"></i> Porsiyon: 1</span>
+                </div>
+
+                <div class="recipe-section">
+                    <h2 class="section-title">🧾 Malzemeler</h2>
+                    <div class="ingredients">
+                        <ul>
+                            <li>Soğuk su (moka pot alt haznesi için)</li>
+                            <li>İnce öğütülmüş kahve (moka pot için, filtre haznesini dolduracak kadar)</li>
+                            <li>100 ml süt</li>
+                            <li>İsteğe bağlı: tarçın, kakao veya çikolata rendesi</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="recipe-section">
+                    <h2 class="section-title">🔧 Ekipman</h2>
+                    <div class="equipment-list">
+                        <div class="equipment-item"><span>Moka Pot</span></div>
+                        <div class="equipment-item"><span>Ocak</span></div>
+                        <div class="equipment-item"><span>Cezve veya küçük tencere</span></div>
+                        <div class="equipment-item"><span>French Press, süt köpürtücü veya kapaklı kavanoz</span></div>
+                        <div class="equipment-item"><span>Bardak</span></div>
+                    </div>
+                </div>
+
+                <div class="recipe-section">
+                    <h2 class="section-title">Hazırlanışı</h2>
+                    <div style="display: flex; flex-wrap: wrap; gap: 2rem;">
+                        <div style="flex:1; min-width: 320px; background: #f8f8f8; border-radius: 15px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                            <h3 style="margin-top:0; color:var(--accent-color); font-size:1.15rem; margin-bottom:1.2rem;">Moka Pot ile Cappuccino</h3>
+                            <ol style="padding-left:1.2rem;">
+                                <li style="margin-bottom:1rem;"><b>Moka Pot'u Hazırlayın:</b><br>Alt hazneye soğuk su koyun (valf seviyesini geçmeyecek şekilde).<br>Filtre haznesine ince öğütülmüş kahveyi ekleyin (bastırmadan, düz olacak şekilde).</li>
+                                <li style="margin-bottom:1rem;"><b>Espresso'yu Demleyin:</b><br>Moka Pot'un üst kısmını kapatın ve ocağa yerleştirin.<br>Kahve yukarı akmaya başladığında ısıyı biraz düşürün.<br>Kahve sesi değiştiğinde demleme tamamlanmıştır. Altını kapatın.</li>
+                                <li style="margin-bottom:1rem;"><b>Sütü Isıtın:</b><br>Yarım bardak sütü (yaklaşık 100 ml) bir cezve veya küçük tencerede kaynatmadan ısıtın.<br>Süt çok sıcak ama kaynamamış olmalı (yaklaşık 65°C – el dayanmayacak sıcaklıkta).</li>
+                                <li style="margin-bottom:1rem;"><b>Sütü Köpürtün:</b><br>Isıtılmış sütü French Press, süt köpürtücü veya kapaklı kavanoz ile köpürtün.<br>Köpüğü oluşturmak için sütün hacmi yaklaşık iki katına çıkmalı.</li>
+                                <li style="margin-bottom:1rem;"><b>Kahveyi ve Sütü Birleştirin:</b><br>Bardağa önce moka pot ile hazırladığınız espressoyu (yaklaşık 1 shot – 30 ml) dökün.<br>Üzerine ısıttığınız sütü ekleyin.<br>En üste ise bolca süt köpüğü yerleştirin.</li>
+                                <li><b>Servis ve İsteğe Bağlı Eklemeler:</b><br>İsterseniz tarçın, kakao veya çikolata rendesi serpebilirsiniz.<br>Afiyet olsun!</li>
+                            </ol>
+                        </div>
+                        <div style="flex:1; min-width: 320px; background: #f8f8f8; border-radius: 15px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                            <h3 style="color:var(--accent-color); font-size:1.15rem; margin-bottom:1.2rem;">Espresso Makinesi ile Cappuccino</h3>
+                            <ol style="padding-left:1.2rem;">
+                                <li style="margin-bottom:1rem;"><b>Espresso Hazırlayın:</b><br>Espresso makinesinde 18-20g ince çekilmiş kahveyi portafiltreye yerleştirin ve sıkıştırın.<br>25-30 saniyede yaklaşık 30 ml espresso elde edin.</li>
+                                <li style="margin-bottom:1rem;"><b>Sütü Isıtın ve Köpürtün:</b><br>100 ml sütü buhar çubuğu ile 65°C'ye kadar ısıtın ve köpürtün.<br>Süt hacmi yaklaşık iki katına çıkmalı, köpük yoğun ve kalın olmalı.</li>
+                                <li style="margin-bottom:1rem;"><b>Bardağa Dökün:</b><br>Önce espressoyu bardağa dökün.<br>Üzerine sıcak sütü ekleyin.<br>En üste ise bolca süt köpüğü ekleyin.</li>
+                                <li><b>Servis ve Süsleme:</b><br>Dilerseniz üzerine kakao, tarçın veya çikolata rendesi serpebilirsiniz.<br>Afiyet olsun!</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recipe-section">
+                    <h2 class="section-title">Püf Noktalar</h2>
+                    <div class="tips-container">
+                        <ul class="tips-list">
+                            <li>Cappuccino, genellikle 1/3 espresso, 1/3 sıcak süt ve 1/3 süt köpüğünden oluşur. Bu oranı göz önünde bulundurarak kendi zevkinize göre dengeyi ayarlayabilirsiniz.</li>
+                            <li>Sütü kaynatmadan ısıtmak, daha yumuşak bir köpük elde etmenizi sağlar.</li>
+                            <li>Köpürtme işlemi için French Press yoksa, kapaklı bir kavanozda da sütü çalkalayabilirsiniz.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="video-section">
+                    <h2 class="section-title">Video Tarifi</h2>
+                    <div class="video-container">
+                        <video controls>
+                            <source src="videos/cappuccino_tarif_videosu.mp4" type="video/mp4">
+                            Tarayıcınız video oynatmayı desteklemiyor.
+                        </video>
+                    </div>
+                </div>
+
+                <a href="recipes.html" class="back-button">Tariflere Dön</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleLogout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html> 
