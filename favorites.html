@@ -229,6 +229,7 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0,0,0,0.5);
+            -webkit-backdrop-filter: blur(5px);
             backdrop-filter: blur(5px);
         }
 
@@ -377,27 +378,28 @@
             </div>
         </div>
     </nav>
-    <div class="favorites-container">
+    <div id="favoritesContainer" class="favorites-container">
         <h2 class="favorites-title">Favori Tariflerim</h2>
         <div id="favoritesGrid" class="favorites-grid"></div>
-        <div id="noFavorites" style="display:none; text-align:center; color:#888; font-size:1.2rem; margin-top:2rem;">Favori tarifiniz yok.</div>
-        <div id="notLoggedIn" style="display:none; text-align:center; color:#c00; font-size:1.2rem; margin-top:2rem;">
-            Favorileri görmek için giriş yapmalısınız.
+        <div id="noFavorites" class="no-favorites">Favori tarifiniz yok.</div>
+        <div id="notLoggedIn" class="not-logged-in">
+            Favorileri görüntülemek için lütfen giriş yapın.
+            <button onclick="openLoginModal()" class="login-btn">Giriş Yap</button>
         </div>
     </div>
 
     <!-- Profil Modalı -->
-    <div id="profileModal" class="profile-modal" style="display:none; position:fixed; z-index:2000; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); backdrop-filter:blur(2px); justify-content:center; align-items:center;">
-        <div class="profile-modal-content" style="background:#fff; border-radius:16px; padding:1.5rem 2rem; box-shadow:0 8px 32px rgba(0,0,0,0.18); min-width:360px; max-width:480px; width:100%; position:relative; display:flex; flex-direction:column; gap:0.7rem; margin:0 auto; height:auto; max-height:none; overflow:visible;">
-            <span class="close-modal" onclick="closeProfileModal()" style="position:absolute; right:1.2rem; top:1.2rem; font-size:2rem; color:#8B6B4E; cursor:pointer;">&times;</span>
+    <div id="profileModal" class="profile-modal">
+        <div class="profile-modal-content">
+            <span class="close-modal" onclick="closeProfileModal()">&times;</span>
             <h2>Profil Bilgilerim</h2>
             <div class="form-group">
-                <label>Ad Soyad</label>
-                <input type="text" id="profileName" readonly>
+                <label for="profileName">Ad Soyad</label>
+                <input type="text" id="profileName" readonly title="Kullanıcının adı ve soyadı">
             </div>
             <div class="form-group">
-                <label>E-posta</label>
-                <input type="email" id="profileEmail" readonly>
+                <label for="profileEmail">E-posta</label>
+                <input type="email" id="profileEmail" readonly title="Kullanıcının e-posta adresi">
             </div>
             <hr>
             <h3>Şifre Değiştir</h3>

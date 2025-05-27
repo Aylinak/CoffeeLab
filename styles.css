@@ -636,4 +636,177 @@ body {
     .recipe-section {
         padding: 1rem;
     }
+}
+
+/* Profile Modal Styles */
+.profile-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.35);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-modal-content {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    min-width: 360px;
+    max-width: 480px;
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    margin: 0 auto;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+}
+
+.close-modal {
+    position: absolute;
+    right: 1.2rem;
+    top: 1.2rem;
+    font-size: 2rem;
+    color: #8B6B4E;
+    cursor: pointer;
+}
+
+/* Favorites Page Styles */
+.no-favorites {
+    display: none;
+    text-align: center;
+    color: #888;
+    font-size: 1.2rem;
+    margin-top: 2rem;
+}
+
+.not-logged-in {
+    display: none;
+    text-align: center;
+    color: #c00;
+    font-size: 1.2rem;
+    margin-top: 2rem;
+}
+
+.favorites-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+/* Recipe Details Section */
+.recipe-details-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.recipe-detail-card {
+    flex: 1;
+    min-width: 320px;
+    background: #f8f8f8;
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.recipe-detail-card h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.recipe-detail-card p {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* Timer Section Styles */
+.timer-section {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.timer-display {
+    font-size: 2rem;
+    margin: 1rem 0;
+    font-weight: bold;
+}
+
+.timer-button {
+    padding: 0.5rem 1.2rem;
+    margin: 0 0.5rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.timer-button.start {
+    background: #8B6B4E;
+    color: white;
+}
+
+.timer-button.pause {
+    background: #bfa074;
+    color: white;
+}
+
+.timer-button.reset {
+    background: #555;
+    color: white;
+}
+
+.timer-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Preparation Section Styles */
+.preparation-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.preparation-card {
+    flex: 1;
+    min-width: 320px;
+    background: #f8f8f8;
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.preparation-card h3 {
+    margin-top: 0;
+    color: var(--accent-color);
+    font-size: 1.15rem;
+    margin-bottom: 1.2rem;
+}
+
+.preparation-card ol {
+    padding-left: 1.2rem;
+}
+
+.preparation-card li {
+    margin-bottom: 1rem;
 } 

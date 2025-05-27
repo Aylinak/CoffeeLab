@@ -279,6 +279,91 @@
             height: 100%;
             object-fit: cover;
         }
+
+        .timer-section {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .timer-display {
+            font-size: 2rem;
+            margin: 1rem 0;
+            font-weight: bold;
+        }
+
+        .timer-button {
+            padding: 0.5rem 1.2rem;
+            margin: 0 0.5rem;
+            border-radius: 8px;
+            border: none;
+            background: #8B6B4E;
+            color: white;
+            font-weight: 600;
+        }
+
+        .timer-button.start {
+            background: #8B6B4E;
+        }
+
+        .timer-button.pause {
+            background: #bfa074;
+        }
+
+        .timer-button.reset {
+            background: #555;
+        }
+
+        /* Profile Modal */
+        .profile-modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .profile-modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+        }
+
+        .close-modal {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-modal:hover,
+        .close-modal:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
     </style>
 </head>
 <body>
@@ -295,7 +380,7 @@
                 <a href="favorites.html" class="nav-link">Favoriler</a>
             </div>
             <div class="nav-right">
-                <a href="profile.html" class="profile-button">
+                <a href="#" class="profile-button" onclick="openProfileModal(); return false;">
                     <i class="fas fa-user"></i>
                     Profilim
                 </a>
@@ -314,21 +399,18 @@
                 Fındıklı Mocha, espresso, sıcak çikolata, süt ve fındık şurubunun muhteşem uyumuyla hazırlanan, zengin ve aromatik bir içecektir. Kahve ve çikolatanın yanı sıra fındık aromasıyla benzersiz bir lezzet sunar.
             </p>
             
-            <div class="recipe-details">
-                <div class="detail-item">
-                    <i class="fas fa-clock"></i>
-                    <h4>Hazırlama Süresi</h4>
+            <div class="recipe-details-container">
+                <div class="recipe-detail-card">
+                    <h3>Malzemeler</h3>
+                    <p>Espresso, sıcak çikolata, süt, fındık şurubu</p>
+                </div>
+                <div class="recipe-detail-card">
+                    <h3>Hazırlama Süresi</h3>
                     <p>5-7 dakika</p>
                 </div>
-                <div class="detail-item">
-                    <i class="fas fa-fire"></i>
-                    <h4>Zorluk</h4>
+                <div class="recipe-detail-card">
+                    <h3>Zorluk</h3>
                     <p>Orta</p>
-                </div>
-                <div class="detail-item">
-                    <i class="fas fa-coffee"></i>
-                    <h4>Porsiyon</h4>
-                    <p>1 kişilik</p>
                 </div>
             </div>
 
@@ -365,70 +447,35 @@
 
             <div class="recipe-section">
                 <h2 class="section-title">Hazırlanışı</h2>
-                <div style="display: flex; flex-wrap: wrap; gap: 2rem;">
-                    <div style="flex:1; min-width: 320px; background: #f8f8f8; border-radius: 15px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
-                        <h3 style="margin-top:0; color:var(--accent-color); font-size:1.15rem; margin-bottom:1.2rem;">Espresso Makinesiyle Fındıklı Mocha</h3>
-                        <ol style="padding-left:1.2rem;">
-                            <li style="margin-bottom:1rem;">Espresso makinesiyle 1 shot espresso hazırlayın.</li>
-                            <li style="margin-bottom:1rem;">Ayrı bir kapta sütü ısıtın ve buharlı çubukla güzelce köpürtün (70–75°C civarı).</li>
-                            <li style="margin-bottom:1rem;">Fincana önce bitter çikolatayı (veya kakaoyu) koyun, üzerine fındık şurubunu ve sıcak espressoyu dökün. İyice karıştırın.</li>
-                            <li style="margin-bottom:1rem;">Köpürttüğünüz sütü yavaşça fincana ekleyin, en üstüne süt köpüğünü bırakın.</li>
+                <div class="preparation-container">
+                    <div class="preparation-card">
+                        <h3>Espresso Makinesiyle Fındıklı Mocha</h3>
+                        <ol>
+                            <li>Espresso makinesiyle 1 shot espresso hazırlayın.</li>
+                            <li>Ayrı bir kapta sütü ısıtın ve buharlı çubukla güzelce köpürtün (70–75°C civarı).</li>
+                            <li>Fincana önce bitter çikolatayı (veya kakaoyu) koyun, üzerine fındık şurubunu ve sıcak espressoyu dökün. İyice karıştırın.</li>
+                            <li>Köpürttüğünüz sütü yavaşça fincana ekleyin, en üstüne süt köpüğünü bırakın.</li>
                             <li>İsteğe bağlı olarak üzerine çırpılmış krema ve rendelenmiş fındık veya çikolata serpin.</li>
                         </ol>
                     </div>
-                    <div style="flex:1; min-width: 320px; background: #f8f8f8; border-radius: 15px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
-                        <h3 style="color:var(--accent-color); font-size:1.15rem; margin-bottom:1.2rem;">French Press ile Fındıklı Mocha (Makinesiz)</h3>
-                        <ol style="padding-left:1.2rem;">
-                            <li style="margin-bottom:1rem;">French press içine kahveyi koyun, 100 ml sıcak su ekleyin, 4 dakika demleyin. Ardından bastırın.</li>
-                            <li style="margin-bottom:1rem;">Sütü küçük bir tencerede ısıtın ama kaynatmayın. Tel çırpıcıyla çırparak köpürtün ya da sütü French press içine koyup 10–15 kez bastırarak köpük elde edin.</li>
-                            <li style="margin-bottom:1rem;">Bir fincana kakao (veya çikolata), fındık ezmesi (veya şurubu) ve şekeri koyun. Üzerine demlediğiniz kahveyi dökün ve iyice karıştırın.</li>
-                            <li style="margin-bottom:1rem;">Üzerine sütü yavaşça ekleyin, en üstüne köpüğü koyun.</li>
+                    <div class="preparation-card">
+                        <h3>French Press ile Fındıklı Mocha (Makinesiz)</h3>
+                        <ol>
+                            <li>French press içine kahveyi koyun, 100 ml sıcak su ekleyin, 4 dakika demleyin. Ardından bastırın.</li>
+                            <li>Sütü küçük bir tencerede ısıtın ama kaynatmayın. Tel çırpıcıyla çırparak köpürtün ya da sütü French press içine koyup 10–15 kez bastırarak köpük elde edin.</li>
+                            <li>Bir fincana kakao (veya çikolata), fındık ezmesi (veya şurubu) ve şekeri koyun. Üzerine demlediğiniz kahveyi dökün ve iyice karıştırın.</li>
+                            <li>Üzerine sütü yavaşça ekleyin, en üstüne köpüğü koyun.</li>
                             <li>Üzeri için krema ve süslemeleri ekleyin.</li>
                         </ol>
                     </div>
                 </div>
-                <div class="timer-section" style="margin-top:2rem; text-align:center;">
+                <div class="timer-section">
                     <h2 class="section-title">4 Dakikalık Demleme Zamanlayıcısı</h2>
-                    <div id="timer-display" style="font-size:2rem; margin:1rem 0; font-weight:bold;">04:00</div>
-                    <button onclick="startTimer()" style="padding:0.5rem 1.2rem; margin:0 0.5rem; border-radius:8px; border:none; background:#8B6B4E; color:white; font-weight:600;">Başlat</button>
-                    <button onclick="pauseTimer()" style="padding:0.5rem 1.2rem; margin:0 0.5rem; border-radius:8px; border:none; background:#bfa074; color:white; font-weight:600;">Duraklat</button>
-                    <button onclick="resetTimer()" style="padding:0.5rem 1.2rem; margin:0 0.5rem; border-radius:8px; border:none; background:#555; color:white; font-weight:600;">Sıfırla</button>
+                    <div id="timer-display" class="timer-display">04:00</div>
+                    <button onclick="startTimer()" class="timer-button start">Başlat</button>
+                    <button onclick="pauseTimer()" class="timer-button pause">Duraklat</button>
+                    <button onclick="resetTimer()" class="timer-button reset">Sıfırla</button>
                 </div>
-                <script>
-                let timer;
-                let timeLeft = 240;
-                let running = false;
-                function updateDisplay() {
-                  const min = String(Math.floor(timeLeft / 60)).padStart(2, '0');
-                  const sec = String(timeLeft % 60).padStart(2, '0');
-                  document.getElementById('timer-display').textContent = `${min}:${sec}`;
-                }
-                function startTimer() {
-                  if (running) return;
-                  running = true;
-                  timer = setInterval(() => {
-                    if (timeLeft > 0) {
-                      timeLeft--;
-                      updateDisplay();
-                    } else {
-                      clearInterval(timer);
-                      running = false;
-                      alert('Süre doldu! Demleme tamam.');
-                    }
-                  }, 1000);
-                }
-                function pauseTimer() {
-                  clearInterval(timer);
-                  running = false;
-                }
-                function resetTimer() {
-                  clearInterval(timer);
-                  timeLeft = 240;
-                  updateDisplay();
-                  running = false;
-                }
-                updateDisplay();
-                </script>
             </div>
 
             <div class="recipe-section">
@@ -457,5 +504,78 @@
             </a>
         </div>
     </div>
+    <!-- Profile Modal -->
+    <div id="profileModal" class="profile-modal">
+        <div class="profile-modal-content">
+            <span class="close-modal" onclick="closeProfileModal()">&times;</span>
+            <h2>Profil Bilgileri</h2>
+            <div class="form-group">
+                <label for="profileName">Ad Soyad</label>
+                <input type="text" id="profileName" readonly title="Kullanıcının adı ve soyadı">
+            </div>
+            <div class="form-group">
+                <label for="profileEmail">E-posta</label>
+                <input type="email" id="profileEmail" readonly title="Kullanıcının e-posta adresi">
+            </div>
+        </div>
+    </div>
+    <script>
+    function openProfileModal() {
+        const profileModal = document.getElementById('profileModal');
+        const savedUser = JSON.parse(localStorage.getItem('user'));
+        if (savedUser) {
+            document.getElementById('profileName').value = savedUser.name;
+            document.getElementById('profileEmail').value = savedUser.email;
+        }
+        profileModal.style.display = 'flex';
+        document.body.classList.add('modal-open');
+    }
+
+    function closeProfileModal() {
+        document.getElementById('profileModal').style.display = 'none';
+        document.body.classList.remove('modal-open');
+    }
+
+    function handleLogout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = 'index.html';
+    }
+
+    // Timer functions
+    let timer;
+    let timeLeft = 240;
+    let running = false;
+    function updateDisplay() {
+        const min = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+        const sec = String(timeLeft % 60).padStart(2, '0');
+        document.getElementById('timer-display').textContent = `${min}:${sec}`;
+    }
+    function startTimer() {
+        if (running) return;
+        running = true;
+        timer = setInterval(() => {
+            if (timeLeft > 0) {
+                timeLeft--;
+                updateDisplay();
+            } else {
+                clearInterval(timer);
+                running = false;
+                alert('Süre doldu! Demleme tamam.');
+            }
+        }, 1000);
+    }
+    function pauseTimer() {
+        clearInterval(timer);
+        running = false;
+    }
+    function resetTimer() {
+        clearInterval(timer);
+        timeLeft = 240;
+        updateDisplay();
+        running = false;
+    }
+    updateDisplay();
+    </script>
 </body>
 </html> 

@@ -987,6 +987,7 @@
             z-index: 2000;
             left: 0; top: 0; width: 100vw; height: 100vh;
             background: rgba(0,0,0,0.35);
+            -webkit-backdrop-filter: blur(2px);
             backdrop-filter: blur(2px);
             justify-content: center;
             align-items: center;
@@ -1029,6 +1030,43 @@
             font-size: 2rem;
             color: #8B6B4E;
             cursor: pointer;
+        }
+
+        .profile-section {
+            display: none;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .profile-section .user-name {
+            color: white;
+            font-weight: 500;
+        }
+
+        .profile-section .profile-button,
+        .profile-section .logout-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .profile-section .profile-button:hover,
+        .profile-section .logout-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .profile-section .profile-icon {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
         }
     </style>
 </head>
@@ -1529,6 +1567,8 @@
             // Profil bölümünü göster
             const profileSection = document.querySelector('.profile-section');
             profileSection.style.display = 'flex';
+            profileSection.style.alignItems = 'center';
+            profileSection.style.gap = '1rem';
             
             // Kullanıcı adını güncelle
             document.getElementById('userNameDisplay').textContent = user.name;
